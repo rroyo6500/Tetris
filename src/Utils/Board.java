@@ -1,4 +1,4 @@
-package Board;
+package Utils;
 
 import java.util.ArrayList;
 import java.util.List;
