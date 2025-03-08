@@ -10,7 +10,6 @@ import java.util.List;
 public class Part {
 
     private final Board<Integer> board;
-    private Parts.Types type;
     private List<List<Integer>> part;
     private List<List<Coordinates>> coordinates;
 
@@ -20,7 +19,7 @@ public class Part {
     }
 
     public void newPart(){
-        type = Parts.getType();
+        Parts.Types type = Parts.getType();
         if (type == null) return;
         part = Parts.getPart(type);
 
@@ -78,7 +77,7 @@ public class Part {
             for (int j = 0; j < coordinates.getFirst().size(); j++) {
                 if (coordinates.get(i).get(j) != null) {
                     board.setPos(coordinates.get(i).get(j).getX(), coordinates.get(i).get(j).getY(),
-                            0);
+                            board.getBase());
                 }
             }
         }
