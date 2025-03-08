@@ -72,22 +72,18 @@ public class Part {
     }
 
     public void down(){
+        clearPart();
 
         for (int i = 0; i < coordinates.size(); i++) {
             for (int j = 0; j < coordinates.getFirst().size(); j++) {
                 if (coordinates.get(i).get(j) != null) {
-                    board.setPos(coordinates.get(i).get(j).getX(), coordinates.get(i).get(j).getY(),
-                            board.getBase());
-                }
-            }
-        }
-
-        for (int i = 0; i < coordinates.size(); i++) {
-            for (int j = 0; j < coordinates.getFirst().size(); j++) {
-                if (coordinates.get(i).get(j) != null) {
-                    if ((board.getPos(coordinates.get(i).get(j).getX(),
-                                    coordinates.get(i).get(j).getY() + 1) % 2) != 0)
-                    {
+                    try {
+                        if ((board.getPos(coordinates.get(i).get(j).getX(),
+                                coordinates.get(i).get(j).getY() + 1) % 2) != 0) {
+                            freeze();
+                            return;
+                        }
+                    } catch (Exception _) {
                         freeze();
                         return;
                     }
@@ -105,6 +101,77 @@ public class Part {
         print();
     }
 
+    public void Left(){
+        clearPart();
+
+        for (int i = 0; i < coordinates.size(); i++) {
+            for (int j = 0; j < coordinates.getFirst().size(); j++) {
+                if (coordinates.get(i).get(j) != null) {
+                    try {
+                        if ((board.getPos(coordinates.get(i).get(j).getX() - 1,
+                                coordinates.get(i).get(j).getY()) % 2) != 0) {
+                            print();
+                            return;
+                        }
+                    } catch (Exception _) {
+                        print();
+                        return;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < coordinates.size(); i++) {
+            for (int j = 0; j < coordinates.getFirst().size(); j++) {
+                if (coordinates.get(i).get(j) != null) {
+                    coordinates.get(i).get(j).setX(coordinates.get(i).get(j).getX() - 1);
+                }
+            }
+        }
+        print();
+    }
+
+    public void Right(){
+        clearPart();
+
+        for (int i = 0; i < coordinates.size(); i++) {
+            for (int j = 0; j < coordinates.getFirst().size(); j++) {
+                if (coordinates.get(i).get(j) != null) {
+                    try {
+                        if ((board.getPos(coordinates.get(i).get(j).getX() + 1,
+                                coordinates.get(i).get(j).getY()) % 2) != 0) {
+                            print();
+                            return;
+                        }
+                    } catch (Exception _) {
+                        print();
+                        return;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < coordinates.size(); i++) {
+            for (int j = 0; j < coordinates.getFirst().size(); j++) {
+                if (coordinates.get(i).get(j) != null) {
+                    coordinates.get(i).get(j).setX(coordinates.get(i).get(j).getX() + 1);
+                }
+            }
+        }
+        print();
+    }
+
+    private void clearPart(){
+        for (int i = 0; i < coordinates.size(); i++) {
+            for (int j = 0; j < coordinates.getFirst().size(); j++) {
+                if (coordinates.get(i).get(j) != null) {
+                    board.setPos(coordinates.get(i).get(j).getX(), coordinates.get(i).get(j).getY(),
+                            board.getBase());
+                }
+            }
+        }
+    }
+
     private void freeze(){
         for (int i = 0; i < coordinates.size(); i++) {
             for (int j = 0; j < coordinates.getFirst().size(); j++) {
@@ -119,7 +186,6 @@ public class Part {
 
     private boolean comp(){
         boolean comp = false;
-
         for (int i = 0; i < coordinates.size(); i++) {
             for (int j = 0; j < coordinates.getFirst().size(); j++) {
                 if (coordinates.get(i).get(j) != null) {
@@ -128,7 +194,6 @@ public class Part {
                 }
             }
         }
-
         return comp;
     }
 
