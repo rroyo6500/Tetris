@@ -11,6 +11,7 @@ public class Part {
 
     private final Board<Integer> board;
     private List<List<Coordinates>> part;
+    private Coordinates center;
     private Parts.Types type;
     private int rotation;
     private int ID;
@@ -23,6 +24,7 @@ public class Part {
     public void newPart(){
         type = Parts.getType();
         part = Parts.getPart(Parts.Types.T);
+        center = Parts.getCenter(Parts.Types.T);
         ID = Parts.getID();
         rotation = 0;
     }
@@ -118,6 +120,7 @@ public class Part {
     }
 
     public void rotate(){
+        if (type == Parts.Types.Cube) { return; }
         clearPart();
 
         List<List<Coordinates>> resCoord = part;

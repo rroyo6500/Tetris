@@ -18,7 +18,7 @@ public class Parts {
     }
 
     public static Types getType(){
-        int rand = (int)(Math.random()*7);
+        int rand = (int)(Math.random()*Types.values().length);
         return switch (rand) {
             case 0 -> Types.L;
             case 1 -> Types.L_Inv;
@@ -32,7 +32,7 @@ public class Parts {
     }
 
     public static int getID(){
-        int rand = (int)(Math.random()*7);
+        int rand = (int)(Math.random()*Types.values().length);
         return switch (rand){
             case 0 -> 2;
             case 1 -> 4;
@@ -42,6 +42,18 @@ public class Parts {
             case 5 -> 12;
             case 6 -> 14;
             default -> throw new IllegalStateException("Unexpected value: " + rand);
+        };
+    }
+
+    public static Coordinates getCenter(Types type){
+        return switch (type){
+            case L -> L.get(2).getFirst();
+            case L_Inv -> L_Inv.get(2).getLast();
+            case T -> T.get(1).get(1);
+            case S -> S.get(1).get(1);
+            case Z -> Z.get(1).get(1);
+            case I -> I.get(1).getFirst();
+            case Cube -> null;
         };
     }
 
@@ -60,28 +72,28 @@ public class Parts {
     private static final List<List<Coordinates>> L = new ArrayList<>(){{
         add(new ArrayList<>(){{ add(new Coordinates(7, 0)); add(null); }});
         add(new ArrayList<>(){{ add(new Coordinates(7, 1)); add(null); }});
-        add(new ArrayList<>(){{ add(new Coordinates(7, 2)); add(new Coordinates(8, 2)); }});
+        add(new ArrayList<>(){{ add(new Coordinates(7, 2, true)); add(new Coordinates(8, 2)); }});
     }};
     private static final List<List<Coordinates>> L_Inv = new ArrayList<>(){{
         add(new ArrayList<>(){{ add(null); add(new Coordinates(7, 0)); }});
         add(new ArrayList<>(){{ add(null); add(new Coordinates(7, 1)); }});
-        add(new ArrayList<>(){{ add(new Coordinates(6, 2)); add(new Coordinates(7, 2)); }});
+        add(new ArrayList<>(){{ add(new Coordinates(6, 2)); add(new Coordinates(7, 2, true)); }});
     }};
     private static final List<List<Coordinates>> T = new ArrayList<>(){{
         add(new ArrayList<>(){{ add(null); add(new Coordinates(7, 0)); add(null); }});
-        add(new ArrayList<>(){{ add(new Coordinates(6, 1)); add(new Coordinates(7, 1)); add(new Coordinates(8, 1)); }});
+        add(new ArrayList<>(){{ add(new Coordinates(6, 1)); add(new Coordinates(7, 1, true)); add(new Coordinates(8, 1)); }});
     }};
     private static final List<List<Coordinates>> S = new ArrayList<>(){{
         add(new ArrayList<>(){{ add(null); add(new Coordinates(7, 0)); add(new Coordinates(8, 0)); }});
-        add(new ArrayList<>(){{ add(new Coordinates(6, 1)); add(new Coordinates(7, 1)); add(null); }});
+        add(new ArrayList<>(){{ add(new Coordinates(6, 1)); add(new Coordinates(7, 1, true)); add(null); }});
     }};
     private static final List<List<Coordinates>> Z = new ArrayList<>(){{
         add(new ArrayList<>(){{ add(new Coordinates(6, 0)); add(new Coordinates(7, 0)); add(null); }});
-        add(new ArrayList<>(){{ add(null); add(new Coordinates(7, 1)); add(new Coordinates(8, 1)); }});
+        add(new ArrayList<>(){{ add(null); add(new Coordinates(7, 1, true)); add(new Coordinates(8, 1)); }});
     }};
     private static final List<List<Coordinates>> I = new ArrayList<>(){{
         add(new ArrayList<>(){{ add(new Coordinates(7, 0)); }});
-        add(new ArrayList<>(){{ add(new Coordinates(7, 1)); }});
+        add(new ArrayList<>(){{ add(new Coordinates(7, 1, true)); }});
         add(new ArrayList<>(){{ add(new Coordinates(7, 2)); }});
         add(new ArrayList<>(){{ add(new Coordinates(7, 3)); }});
     }};

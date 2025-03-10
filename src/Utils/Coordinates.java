@@ -8,6 +8,13 @@ public class Coordinates {
     public Coordinates(int x, int y){
         this.X = x;
         this.Y = y;
+        this.isCenter = false;
+    }
+
+    public Coordinates(int x, int y, boolean isCenter){
+        this.X = x;
+        this.Y = y;
+        this.isCenter = isCenter;
     }
 
     public int getX(){ return X; }
