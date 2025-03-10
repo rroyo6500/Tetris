@@ -19,6 +19,21 @@ public class Main {
 
         board.forEach();
 
+        System.out.println(" ");
+        part.rotate();
+
+        board.forEach();
+
+        System.out.println(" ");
+        part.rotate();
+
+        board.forEach();
+
+        System.out.println(" ");
+        part.rotate();
+
+        board.forEach();
+
     }
 }
 

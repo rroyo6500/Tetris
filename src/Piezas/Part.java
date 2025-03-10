@@ -23,8 +23,8 @@ public class Part {
 
     public void newPart(){
         type = Parts.getType();
-        part = Parts.getPart(Parts.Types.T);
-        center = Parts.getCenter(Parts.Types.T);
+        part = Parts.getPart(Parts.Types.S);
+        center = Parts.getCenter(Parts.Types.S);
         ID = Parts.getID();
         rotation = 0;
     }
@@ -131,12 +131,7 @@ public class Part {
             return;
         }
 
-        /*
-        Rotacion de las cordenadas
-         */
-
-        part.clear();
-        part.addAll(resCoord);
+        part = rotateList(Rotations.rotate(part, center));
 
         print(part);
     }
