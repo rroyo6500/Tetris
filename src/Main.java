@@ -8,8 +8,17 @@ public class Main {
         Part part = new Part(board);
 
         part.down();
-        part.Left();
-        part.Right();
+        part.down();
+        part.down();
+        part.down();
+
+        board.forEach();
+
+        System.out.println(" ");
+        part.rotate();
+
+        board.forEach();
 
     }
 }
+

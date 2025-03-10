@@ -3,6 +3,7 @@ package Utils;
 public class Coordinates {
 
     private int X, Y;
+    private boolean isCenter;
 
     public Coordinates(int x, int y){
         this.X = x;
@@ -14,5 +15,8 @@ public class Coordinates {
 
     public void setX(int x){ X = x; }
     public void setY(int y){ Y = y; }
+
+    public boolean isCenter(){ return isCenter; }
+    public void setCenter(boolean center){ isCenter = center; }
 
 }
