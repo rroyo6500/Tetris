@@ -36,9 +36,6 @@ public class Rotations {
             if (res.get(y).get(x - 1) != null) {
                 res.get(y).get(x - 1).setX(center.getX());
                 res.get(y).get(x - 1).setY(center.getY() - 1);
-
-                res.get(y).get(x - 2).setX(center.getX());
-                res.get(y).get(x - 2).setY(center.getY() - 2);
             }
         } catch (Exception _) {}
     }
@@ -47,9 +44,6 @@ public class Rotations {
             if (res.get(y).get(x + 1) != null) {
                 res.get(y).get(x + 1).setX(center.getX());
                 res.get(y).get(x + 1).setY(center.getY() + 1);
-
-                res.get(y).get(x + 2).setX(center.getX());
-                res.get(y).get(x + 2).setY(center.getY() + 2);
             }
         } catch (Exception _) {}
     }
@@ -58,9 +52,6 @@ public class Rotations {
             if (res.get(y - 1).get(x) != null) {
                 res.get(y - 1).get(x).setX(center.getX() + 1);
                 res.get(y - 1).get(x).setY(center.getY());
-
-                res.get(y - 2).get(x).setX(center.getX() + 2);
-                res.get(y - 2).get(x).setY(center.getY());
             }
         } catch (Exception _) {}
     }
@@ -69,9 +60,6 @@ public class Rotations {
             if (res.get(y + 1).get(x) != null) {
                 res.get(y + 1).get(x).setX(center.getX() - 1);
                 res.get(y + 1).get(x).setY(center.getY());
-
-                res.get(y + 2).get(x).setX(center.getX() - 2);
-                res.get(y + 2).get(x).setY(center.getY());
             }
         } catch (Exception _) {}
     }
