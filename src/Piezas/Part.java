@@ -123,7 +123,8 @@ public class Part {
         if (type == Parts.Types.Cube) { return; }
         clearPart();
 
-        List<List<Coordinates>> resCoord = part;
+        List<List<Coordinates>> resCoord = new ArrayList<>();
+        resCoord.addAll(part);
         resCoord = rotateList(resCoord);
 
         if (comp(resCoord)) {
