@@ -13,7 +13,6 @@ public class Part {
     private List<List<Coordinates>> part;
     private Coordinates center;
     private Parts.Types type;
-    private int rotation;
     private int ID;
 
     public Part(Board<Integer> board){
@@ -23,10 +22,9 @@ public class Part {
 
     public void newPart(){
         type = Parts.getType();
-        part = Parts.getPart(Parts.Types.S);
-        center = Parts.getCenter(Parts.Types.S);
+        part = Parts.getPart(type);
+        center = Parts.getCenter(type);
         ID = Parts.getID();
-        rotation = 0;
     }
 
     public void down(){
@@ -37,7 +35,8 @@ public class Part {
                 if (part.get(i).get(j) != null) {
                     try {
                         if ((board.getPos(part.get(i).get(j).getX(),
-                                part.get(i).get(j).getY() + 1) % 2) != 0) {
+                                part.get(i).get(j).getY() + 1) % 2) != 0)
+                        {
                             freeze();
                             return;
                         }
@@ -67,7 +66,8 @@ public class Part {
                 if (part.get(i).get(j) != null) {
                     try {
                         if ((board.getPos(part.get(i).get(j).getX() - 1,
-                                part.get(i).get(j).getY()) % 2) != 0) {
+                                part.get(i).get(j).getY()) % 2) != 0)
+                        {
                             print(part);
                             return;
                         }
@@ -97,7 +97,8 @@ public class Part {
                 if (part.get(i).get(j) != null) {
                     try {
                         if ((board.getPos(part.get(i).get(j).getX() + 1,
-                                part.get(i).get(j).getY()) % 2) != 0) {
+                                part.get(i).get(j).getY()) % 2) != 0)
+                        {
                             print(part);
                             return;
                         }
@@ -123,16 +124,15 @@ public class Part {
         if (type == Parts.Types.Cube) { return; }
         clearPart();
 
-        List<List<Coordinates>> resCoord = new ArrayList<>();
-        resCoord.addAll(part);
-        resCoord = rotateList(resCoord);
+        List<List<Coordinates>> resCoord = new ArrayList<>(part);
+        resCoord = rotateList(Rotations.rotate(resCoord, center, type));
 
         if (comp(resCoord)) {
             print(part);
             return;
         }
 
-        part = rotateList(Rotations.rotate(part, center));
+        part = rotateList(Rotations.rotate(part, center, type));
 
         print(part);
     }
