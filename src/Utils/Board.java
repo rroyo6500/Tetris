@@ -22,7 +22,13 @@ public class Board<T> {
         }};
     }
 
-    public void setPos(int X, int Y, T newElement){ board.get(Y).set(X, newElement); }
+    public void setPos(int X, int Y, T newElement){
+        try {
+            board.get(Y).set(X, newElement);
+        } catch (Exception _) {
+            System.out.println("a");
+        }
+    }
 
     public T getPos(int X, int Y){ return board.get(Y).get(X); }
     public T getBase(){ return base; }

@@ -10,7 +10,7 @@ import java.util.List;
 public class Part {
 
     private final Board<Integer> board;
-    private List<List<Coordinates>> part;
+    private List<List<Coordinates>> part = new ArrayList<>();
     private Coordinates center;
     private Parts.Types type;
     private int ID;
@@ -21,22 +21,33 @@ public class Part {
     }
 
     public void newPart(){
-        type = Parts.getType();
-        part = Parts.getPart(type);
-        center = Parts.getCenter(type);
+        part.clear();
+
         ID = Parts.getID();
+        type = Parts.getType();
+        center = type.getCenter();
+
+        for (List<Coordinates> f : type.getPart()) {
+            part.add(new ArrayList<>(){{
+                for (Coordinates c : f) {
+                    if (c != null) {
+                        add(new Coordinates(c.getX(), c.getY(), c.isCenter()));
+                    }
+                }
+            }});
+        }
+
+        print(part);
     }
 
     public void down(){
         clearPart();
 
-        for (int i = 0; i < part.size(); i++) {
-            for (int j = 0; j < part.getFirst().size(); j++) {
-                if (part.get(i).get(j) != null) {
+        for (List<Coordinates> f : part) {
+            for (Coordinates c : f) {
+                if (c != null) {
                     try {
-                        if ((board.getPos(part.get(i).get(j).getX(),
-                                part.get(i).get(j).getY() + 1) % 2) != 0)
-                        {
+                        if (board.getPos(c.getX(), (c.getY() + 1)) != 0) {
                             freeze();
                             return;
                         }
@@ -48,26 +59,25 @@ public class Part {
             }
         }
 
-        for (int i = 0; i < part.size(); i++) {
-            for (int j = 0; j < part.getFirst().size(); j++) {
-                if (part.get(i).get(j) != null) {
-                    part.get(i).get(j).setY(part.get(i).get(j).getY() + 1);
+        for (List<Coordinates> f : part) {
+            for (Coordinates c : f) {
+                if (c != null) {
+                    c.setY(c.getY() + 1);
                 }
             }
         }
+
         print(part);
     }
 
     public void Left(){
         clearPart();
 
-        for (int i = 0; i < part.size(); i++) {
-            for (int j = 0; j < part.getFirst().size(); j++) {
-                if (part.get(i).get(j) != null) {
+        for (List<Coordinates> f : part) {
+            for (Coordinates c : f) {
+                if (c != null) {
                     try {
-                        if ((board.getPos(part.get(i).get(j).getX() - 1,
-                                part.get(i).get(j).getY()) % 2) != 0)
-                        {
+                        if (board.getPos((c.getX() - 1), c.getY()) != 0) {
                             print(part);
                             return;
                         }
@@ -79,26 +89,25 @@ public class Part {
             }
         }
 
-        for (int i = 0; i < part.size(); i++) {
-            for (int j = 0; j < part.getFirst().size(); j++) {
-                if (part.get(i).get(j) != null) {
-                    part.get(i).get(j).setX(part.get(i).get(j).getX() - 1);
+        for (List<Coordinates> f : part) {
+            for (Coordinates c : f) {
+                if (c != null) {
+                    c.setX(c.getX() - 1);
                 }
             }
         }
+
         print(part);
     }
 
     public void Right(){
         clearPart();
 
-        for (int i = 0; i < part.size(); i++) {
-            for (int j = 0; j < part.getFirst().size(); j++) {
-                if (part.get(i).get(j) != null) {
+        for (List<Coordinates> f : part) {
+            for (Coordinates c : f) {
+                if (c != null) {
                     try {
-                        if ((board.getPos(part.get(i).get(j).getX() + 1,
-                                part.get(i).get(j).getY()) % 2) != 0)
-                        {
+                        if (board.getPos((c.getX() + 1), c.getY()) != 0) {
                             print(part);
                             return;
                         }
@@ -110,13 +119,14 @@ public class Part {
             }
         }
 
-        for (int i = 0; i < part.size(); i++) {
-            for (int j = 0; j < part.getFirst().size(); j++) {
-                if (part.get(i).get(j) != null) {
-                    part.get(i).get(j).setX(part.get(i).get(j).getX() + 1);
+        for (List<Coordinates> f : part) {
+            for (Coordinates c : f) {
+                if (c != null) {
+                    c.setX(c.getX() + 1);
                 }
             }
         }
+
         print(part);
     }
 
@@ -124,7 +134,16 @@ public class Part {
         if (type == Parts.Types.Cube) { return; }
         clearPart();
 
-        List<List<Coordinates>> resCoord = new ArrayList<>(part);
+        List<List<Coordinates>> resCoord = new ArrayList<>();
+        for (List<Coordinates> f : part) {
+            resCoord.add(new ArrayList<>(){{
+                for (Coordinates c : f) {
+                    if (c != null) {
+                        add(new Coordinates(c.getX(), c.getY()));
+                    }
+                }
+            }});
+        }
         resCoord = rotateList(Rotations.rotate(resCoord, center, type));
 
         if (comp(resCoord)) {
@@ -138,18 +157,18 @@ public class Part {
     }
 
     private <T> List<List<T>> rotateList(List<List<T>> matrix){
-        int numRows = matrix.size();
-        int numCols = matrix.getFirst().size();
+        int rows = matrix.size();
+        int cols = matrix.getFirst().size();
 
         List<List<T>> rotatedMatrix = new ArrayList<>();
 
-        for (int col = 0; col < numCols; col++) {
+        for (int i = 0; i < cols; i++) {
             rotatedMatrix.add(new ArrayList<>());
         }
 
-        for (int row = numRows - 1; row >= 0; row--) {
-            for (int col = 0; col < numCols; col++) {
-                rotatedMatrix.get(col).add(matrix.get(row).get(col));
+        for (int i = rows - 1; i >= 0; i--) {
+            for (int j = 0; j < cols; j++) {
+                rotatedMatrix.get(j).add(matrix.get(i).get(j));
             }
         }
 
@@ -158,21 +177,20 @@ public class Part {
     }
 
     private void clearPart(){
-        for (int i = 0; i < part.size(); i++) {
-            for (int j = 0; j < part.getFirst().size(); j++) {
-                if (part.get(i).get(j) != null) {
-                    board.setPos(part.get(i).get(j).getX(), part.get(i).get(j).getY(),
-                            board.getBase());
+        for (List<Coordinates> f : part) {
+            for (Coordinates c : f) {
+                if (c != null) {
+                    board.setPos(c.getX(), c.getY(), board.getBase());
                 }
             }
         }
     }
 
     private void freeze(){
-        for (int i = 0; i < part.size(); i++) {
-            for (int j = 0; j < part.getFirst().size(); j++) {
-                if (part.get(i).get(j) != null) {
-                    board.setPos(part.get(i).get(j).getX(), part.get(i).get(j).getY(), (ID - 1));
+        for (List<Coordinates> f : part) {
+            for (Coordinates c : f) {
+                if (c != null) {
+                    board.setPos(c.getX(), c.getY(), (ID - 1));
                 }
             }
         }
@@ -181,11 +199,15 @@ public class Part {
 
     private boolean comp(List<List<Coordinates>> coordinates){
         boolean comp = false;
-        for (int i = 0; i < coordinates.size(); i++) {
-            for (int j = 0; j < coordinates.getFirst().size(); j++) {
-                if (coordinates.get(i).get(j) != null) {
-                    if (board.getPos(coordinates.get(i).get(j).getX(), coordinates.get(i).get(j).getY()) != 0)
+        for (List<Coordinates> f : coordinates) {
+            for (Coordinates c : f) {
+                if (c != null) {
+                    try{
+                        if (board.getPos(c.getX(), c.getY()) != 0)
+                            comp = true;
+                    } catch (Exception _) {
                         comp = true;
+                    }
                 }
             }
         }
@@ -193,14 +215,10 @@ public class Part {
     }
 
     private void print(List<List<Coordinates>> part){
-        int i_ = part.size();
-        int j_ = part.getFirst().size();
-        for (int i = 0; i < i_; i++) {
-            for (int j = 0; j < j_; j++) {
-                if (part.get(i).get(j) != null) {
-                    board.setPos(
-                            part.get(i).get(j).getX(), part.get(i).get(j).getY(),
-                            ID);
+        for (List<Coordinates> f : part) {
+            for (Coordinates c : f) {
+                if (c != null) {
+                    board.setPos(c.getX(), c.getY(), ID);
                 }
             }
         }
