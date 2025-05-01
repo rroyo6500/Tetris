@@ -1,25 +1,33 @@
+package Main;
+
 import Piezas.Part;
 import Utils.Board;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Main {
-    public static void main(String[] args) {
-        new Tetris_IG();
+public class Tetris_IG extends JFrame {
+
+    int Velocidad = 500;
+    static JPanel Tablero;
+    static Timer gameTimer;
+
+    static Board<Integer> board = new Board<>(15, 30, 0);
+    static Part part = new Part(board);
+
+    static Thread rotationThread = new Thread(() -> {});
+    static Thread startThread = new Thread(() -> {});
+
+    private static void rotationT(){
+        if (!startThread.isAlive()){
+            rotationThread = new Thread(() -> part.rotate());
+            rotationThread.start();
+        }
     }
-}
-
-class Tetris_IG extends JFrame {
-
-    Board<Integer> board = new Board<>(15, 30, 0);
-    Part part = new Part(board);
-
-    JPanel Tablero;
-    Timer gameTimer;
 
     public Tetris_IG() {
 
@@ -29,7 +37,7 @@ class Tetris_IG extends JFrame {
 
                 int x = 0, y = 0;
 
-                for(List<Integer> R : board.getBoard()){
+                for(java.util.List<Integer> R : board.getBoard()){
                     for(Integer C : R){
                         if (C == 1 || C == 2) {
                             g.setColor(Color.BLUE);
@@ -81,7 +89,21 @@ class Tetris_IG extends JFrame {
         Preview.setBorder(BorderFactory.createLineBorder(Color.GRAY, 4));
         add(Preview);
 
-        start();
+        JButton startGame = new JButton("Start");
+        startGame.setBounds(470, 225, 300, 50);
+        startGame.setBorder(BorderFactory.createLineBorder(Color.GRAY, 4));
+        startGame.setBackground(Color.GREEN);
+        startGame.addActionListener(_ -> start());
+        startGame.setFocusable(true);
+        startGame.addKeyListener(keyAdapter());
+        add(startGame);
+
+        JButton stopGame = new JButton("Stop");
+        stopGame.setBounds(470, 275, 300, 50);
+        stopGame.setBorder(BorderFactory.createLineBorder(Color.GRAY, 4));
+        stopGame.setBackground(Color.RED);
+        stopGame.addActionListener(_ -> stop());
+        add(stopGame);
 
         setLayout(null);
         setTitle("Tetris");
@@ -97,10 +119,40 @@ class Tetris_IG extends JFrame {
         gameTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                part.down();
+                if (!rotationThread.isAlive()){
+                    startThread = new Thread(() -> part.down());
+                    startThread.start();
+                }
+            }
+        }, 0, Velocidad + 1);
+        gameTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
                 Tablero.repaint();
             }
-        }, 0, 50);
+        }, 0, 1000 / 60);
+    }
+
+    public static void stop(){
+        board.reset();
+        part.newPart();
+        gameTimer.cancel();
+        SwingUtilities.invokeLater(Tablero::repaint);
+    }
+
+    public static KeyAdapter keyAdapter(){
+        return new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+
+                if (e.getKeyCode() == 37) part.Left();
+                else if (e.getKeyCode() == 40) part.down();
+                else if (e.getKeyCode() == 39) part.Right();
+                else if (e.getKeyCode() == 38) rotationT();
+
+            }
+        };
     }
 
 }

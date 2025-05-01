@@ -9,27 +9,29 @@ import java.util.List;
 public class Parts {
 
     public enum Types {
-        L(Parts.L, Parts.L.get(2).getFirst()),
-        L_Inv(Parts.L_Inv, Parts.L_Inv.get(2).getLast()),
-        T(Parts.T, Parts.T.get(1).get(1)),
-        S(Parts.S, Parts.S.get(1).get(1)),
-        Z(Parts.Z, Parts.Z.get(1).get(1)),
-        I(Parts.I, Parts.I.get(2).getFirst()),
-        Cube(Parts.Cube, null);
+        L(Parts.L, 2),
+        L_Inv(Parts.L_Inv, 3),
+        T(Parts.T, 2),
+        S(Parts.S, 3),
+        Z(Parts.Z, 3),
+        I(Parts.I, 2),
+        Cube(Parts.Cube);
 
-        private final List<List<Coordinates>> part;
-        private final Coordinates center;
+        private final List<Coordinates> part;
+        private int center;
 
-        Types(List<List<Coordinates>> part, Coordinates center) {
+        Types(List<Coordinates> part, int center) {
             this.part = part;
             this.center = center;
         }
+        Types(List<Coordinates> part) { this.part = part; }
 
-        public List<List<Coordinates>> getPart() {
+        public List<Coordinates> getPart() {
             return part;
         }
-        public Coordinates getCenter() {
-            return center;
+        public Coordinates getCenter(List<Coordinates> part) {
+            if (this == Cube) return null;
+            else return part.get(center);
         }
     }
 
@@ -52,50 +54,53 @@ public class Parts {
         };
     }
 
-    private static final List<List<Coordinates>> L = new ArrayList<>(
+    private static final List<Coordinates> L = new ArrayList<>(
             Arrays.asList(
-                    Arrays.asList(new Coordinates(7, 0), null),
-                    Arrays.asList(new Coordinates(7, 1), null),
-                    Arrays.asList(new Coordinates(7, 2, true), new Coordinates(8, 2))
+                    new Coordinates(7, 0),
+                    new Coordinates(7, 1),
+                    new Coordinates(7, 2, true),
+                    new Coordinates(8, 2)
             ));
-    private static final List<List<Coordinates>> L_Inv = new ArrayList<>(
+    private static final List<Coordinates> L_Inv = new ArrayList<>(
             Arrays.asList(
-                    Arrays.asList(null, new Coordinates(7, 0)),
-                    Arrays.asList(null, new Coordinates(7, 1)),
-                    Arrays.asList(new Coordinates(6, 2), new Coordinates(7, 2, true))
+                    new Coordinates(7, 0),
+                    new Coordinates(7, 1),
+                    new Coordinates(6, 2),
+                    new Coordinates(7, 2, true)
             ));
-    private static final List<List<Coordinates>> T = new ArrayList<>(
+    private static final List<Coordinates> T = new ArrayList<>(
             Arrays.asList(
-                    Arrays.asList(null, new Coordinates(7, 0), null),
-                    Arrays.asList(new Coordinates(6, 1), new Coordinates(7, 1, true), new Coordinates(8, 1))
+                    new Coordinates(7, 0),
+                    new Coordinates(6, 1),
+                    new Coordinates(7, 1, true),
+                    new Coordinates(8, 1)
             ));
-    private static final List<List<Coordinates>> S = new ArrayList<>(
+    private static final List<Coordinates> S = new ArrayList<>(
             Arrays.asList(
-                    Arrays.asList(null, new Coordinates(7, 0), new Coordinates(8, 1)),
-                    Arrays.asList(new Coordinates(6, 1), new Coordinates(7, 1, true), null)
+                    new Coordinates(7, 0),
+                    new Coordinates(8,  0),
+                    new Coordinates(6, 1),
+                    new Coordinates(7, 1, true)
             ));
-    private static final List<List<Coordinates>> Z = new ArrayList<>(
+    private static final List<Coordinates> Z = new ArrayList<>(
             Arrays.asList(
-                    Arrays.asList(new Coordinates(6, 0), new Coordinates(7, 0), null),
-                    Arrays.asList(null, new Coordinates(7, 1, true), new Coordinates(8, 1))
+                    new Coordinates(6, 0),
+                    new Coordinates(7, 0),
+                    new Coordinates(8, 1),
+                    new Coordinates(7, 1, true)
             ));
-    private static final List<List<Coordinates>> I = new ArrayList<>(
+    private static final List<Coordinates> I = new ArrayList<>(
             Arrays.asList(
-                    List.of(new Coordinates(7, 0)),
-                    List.of(new Coordinates(7, 1)),
-                    List.of(new Coordinates(7, 2, true)),
-                    List.of(new Coordinates(7, 3))
+                    new Coordinates(7, 0),
+                    new Coordinates(7, 1),
+                    new Coordinates(7, 2, true),
+                    new Coordinates(7, 3)
             ));
-    private static final List<List<Coordinates>> Cube = new ArrayList<>(
+    private static final List<Coordinates> Cube = new ArrayList<>(
             Arrays.asList(
-                    Arrays.asList(new Coordinates(7, 0), new Coordinates(8, 0)),
-                    Arrays.asList(new Coordinates(7, 1), new Coordinates(8, 1))
+                    new Coordinates(7, 0),
+                    new Coordinates(8, 0),
+                    new Coordinates(7, 1),
+                    new Coordinates(8, 1)
             ));
 }
-
-/*
-Arrays.asList(
-                    Arrays.asList(null, new Coordinates(7, 0), null),
-                    Arrays.asList(new Coordinates(6, 1), new Coordinates(7, 1, true), new Coordinates(8, 1))
-            ));
- */

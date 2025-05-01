@@ -1,5 +1,6 @@
 package Piezas;
 
+import Main.Tetris_IG;
 import Piezas.Types.Parts;
 import Utils.Board;
 import Utils.Coordinates;
@@ -10,7 +11,7 @@ import java.util.List;
 public class Part {
 
     private final Board<Integer> board;
-    private List<List<Coordinates>> part = new ArrayList<>();
+    private List<Coordinates> part = new ArrayList<>();
     private Coordinates center;
     private Parts.Types type;
     private int ID;
@@ -21,49 +22,63 @@ public class Part {
     }
 
     public void newPart(){
-        part.clear();
+        compLine();
+        part = new ArrayList<>();
 
-        ID = Parts.getID();
         type = Parts.getType();
-        center = type.getCenter();
+        for (Coordinates c : type.getPart()) {
+            if (c != null) {
+                part.add(new Coordinates(c.x(), c.y(), c.isCenter()));
+            }
+        }
+        ID = Parts.getID();
+        center = type.getCenter(part);
 
-        for (List<Coordinates> f : type.getPart()) {
-            part.add(new ArrayList<>(){{
-                for (Coordinates c : f) {
-                    if (c != null) {
-                        add(new Coordinates(c.getX(), c.getY(), c.isCenter()));
-                    }
-                }
-            }});
+        for (Coordinates c : part) {
+            if (c != null) {
+                if ((board.getPos(c.x(), c.y()) % 2) != 0)
+                    Tetris_IG.stop();
+            }
         }
 
         print(part);
     }
 
+    private void compLine(){
+        while (true) {
+            int count = 0;
+            for (Integer p : board.getBoard().getLast()) {
+                if (p != 0) {
+                    count++;
+                }
+            }
+            if (count == board.getWith()) {
+                board.reset(board.getBoard().size() - 1);
+                board.moveDown();
+            } else break;
+        }
+    }
+
     public void down(){
         clearPart();
 
-        for (List<Coordinates> f : part) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    try {
-                        if (board.getPos(c.getX(), (c.getY() + 1)) != 0) {
-                            freeze();
-                            return;
-                        }
-                    } catch (Exception _) {
+        for (Coordinates c : part) {
+            if (c != null) {
+                try {
+                    if (board.getPos(c.x(), (c.y() + 1)) != 0) {
                         freeze();
                         return;
                     }
+                } catch (Exception _) {
+                    freeze();
+                    return;
                 }
             }
         }
 
-        for (List<Coordinates> f : part) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    c.setY(c.getY() + 1);
-                }
+        for (Coordinates c : part) {
+            if (c != null) {
+                c.setY(c.y() + 1);
             }
         }
 
@@ -73,27 +88,23 @@ public class Part {
     public void Left(){
         clearPart();
 
-        for (List<Coordinates> f : part) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    try {
-                        if (board.getPos((c.getX() - 1), c.getY()) != 0) {
-                            print(part);
-                            return;
-                        }
-                    } catch (Exception _) {
+        for (Coordinates c : part) {
+            if (c != null) {
+                try {
+                    if (board.getPos((c.x() - 1), c.y()) != 0) {
                         print(part);
                         return;
                     }
+                } catch (Exception _) {
+                    print(part);
+                    return;
                 }
             }
         }
 
-        for (List<Coordinates> f : part) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    c.setX(c.getX() - 1);
-                }
+        for (Coordinates c : part) {
+            if (c != null) {
+                c.setX(c.x() - 1);
             }
         }
 
@@ -103,27 +114,23 @@ public class Part {
     public void Right(){
         clearPart();
 
-        for (List<Coordinates> f : part) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    try {
-                        if (board.getPos((c.getX() + 1), c.getY()) != 0) {
-                            print(part);
-                            return;
-                        }
-                    } catch (Exception _) {
+        for (Coordinates c : part) {
+            if (c != null) {
+                try {
+                    if (board.getPos((c.x() + 1), c.y()) != 0) {
                         print(part);
                         return;
                     }
+                } catch (Exception _) {
+                    print(part);
+                    return;
                 }
             }
         }
 
-        for (List<Coordinates> f : part) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    c.setX(c.getX() + 1);
-                }
+        for (Coordinates c : part) {
+            if (c != null) {
+                c.setX(c.x() + 1);
             }
         }
 
@@ -134,92 +141,90 @@ public class Part {
         if (type == Parts.Types.Cube) { return; }
         clearPart();
 
-        List<List<Coordinates>> resCoord = new ArrayList<>();
-        for (List<Coordinates> f : part) {
-            resCoord.add(new ArrayList<>(){{
-                for (Coordinates c : f) {
-                    if (c != null) {
-                        add(new Coordinates(c.getX(), c.getY()));
-                    }
-                }
-            }});
+        List<Coordinates> resCoord = new ArrayList<>();
+        for (Coordinates c : part) {
+            if (c != null) {
+                resCoord.add(new Coordinates(c.x(), c.y(), c.isCenter()));
+            }else resCoord.add(null);
         }
-        resCoord = rotateList(Rotations.rotate(resCoord, center, type));
+        rotateCoords(resCoord);
 
         if (comp(resCoord)) {
             print(part);
             return;
         }
 
-        part = rotateList(Rotations.rotate(part, center, type));
+        rotateCoords(part);
 
         print(part);
     }
 
-    private <T> List<List<T>> rotateList(List<List<T>> matrix){
-        int rows = matrix.size();
-        int cols = matrix.getFirst().size();
+    private void rotateCoords(List<Coordinates> matrix){
+        for (Coordinates c : matrix) {
+            if (c != null && !c.isCenter()) {
 
-        List<List<T>> rotatedMatrix = new ArrayList<>();
+                switch (type) {
+                    case S, Z: {
+                        if (c.x() == (center.x()-1) && c.y() == (center.y()-1)) c.setCoords(center.x() + 1, c.y());
+                        else if (c.x() == (center.x()+1) && c.y() == (center.y()-1)) c.setCoords(c.x(),center.y() + 1);
+                        else if (c.x() == (center.x()+1) && c.y() == (center.y()+1)) c.setCoords(center.x() - 1, c.y());
+                        else if (c.x() == (center.x()-1) && c.y() == (center.y()+1)) c.setCoords(c.x(), center.y() - 1);
+                        break;
+                    }
+                    case I, L, L_Inv: {
+                        if (c.x() == (center.x()-2) && c.y() == center.y()) c.setCoords(center.x(), c.y() - 2);
+                        else if (c.x() == center.x() && c.y() == (center.y()-2)) c.setCoords(c.x() + 2, center.y());
+                        else if (c.x() == (center.x()+2) && c.y() == center.y()) c.setCoords(center.x(), c.y() + 2);
+                        else if (c.x() == center.x() && c.y() == (center.y()+2)) c.setCoords(c.x() - 2, center.y());
+                        break;
+                    }
+                }
 
-        for (int i = 0; i < cols; i++) {
-            rotatedMatrix.add(new ArrayList<>());
-        }
+                if (c.x() == (center.x()-1) && c.y() == center.y()) c.setCoords(center.x(), c.y() - 1);
+                else if (c.x() == center.x() && c.y() == (center.y()-1)) c.setCoords(c.x() + 1, center.y());
+                else if (c.x() == (center.x()+1) && c.y() == center.y()) c.setCoords(center.x(), c.y() + 1);
+                else if (c.x() == center.x() && c.y() == (center.y()+1)) c.setCoords(c.x() - 1, center.y());
 
-        for (int i = rows - 1; i >= 0; i--) {
-            for (int j = 0; j < cols; j++) {
-                rotatedMatrix.get(j).add(matrix.get(i).get(j));
             }
         }
-
-        return rotatedMatrix;
-
     }
 
     private void clearPart(){
-        for (List<Coordinates> f : part) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    board.setPos(c.getX(), c.getY(), board.getBase());
-                }
+        for (Coordinates c : part) {
+            if (c != null) {
+                board.setPos(c.x(), c.y(), board.getBase());
             }
         }
     }
 
     private void freeze(){
-        for (List<Coordinates> f : part) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    board.setPos(c.getX(), c.getY(), (ID - 1));
-                }
+        for (Coordinates c : part) {
+            if (c != null) {
+                board.setPos(c.x(), c.y(), (ID - 1));
             }
         }
         newPart();
     }
 
-    private boolean comp(List<List<Coordinates>> coordinates){
+    private boolean comp(List<Coordinates> coordinates){
         boolean comp = false;
-        for (List<Coordinates> f : coordinates) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    try{
-                        if (board.getPos(c.getX(), c.getY()) != 0)
-                            comp = true;
-                    } catch (Exception _) {
+        for (Coordinates c : part) {
+            if (c != null) {
+                try{
+                    if (board.getPos(c.x(), c.y()) != 0)
                         comp = true;
-                    }
+                } catch (Exception _) {
+                    comp = true;
                 }
             }
         }
         return comp;
     }
 
-    private void print(List<List<Coordinates>> part){
-        for (List<Coordinates> f : part) {
-            for (Coordinates c : f) {
-                if (c != null) {
-                    board.setPos(c.getX(), c.getY(), ID);
-                }
+    private void print(List<Coordinates> part){
+        for (Coordinates c : part) {
+            if (c != null) {
+                board.setPos(c.x(), c.y(), ID);
             }
         }
     }

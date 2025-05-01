@@ -17,11 +17,15 @@ public class Coordinates {
         this.isCenter = isCenter;
     }
 
-    public int getX(){ return X; }
-    public int getY(){ return Y; }
+    public int x(){ return X; }
+    public int y(){ return Y; }
 
     public void setX(int x){ X = x; }
     public void setY(int y){ Y = y; }
+    public void setCoords(int x, int y){
+        X = x;
+        Y = y;
+    }
 
     public boolean isCenter(){ return isCenter; }
     public void setCenter(boolean center){ isCenter = center; }
