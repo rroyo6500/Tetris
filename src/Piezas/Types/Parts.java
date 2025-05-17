@@ -40,20 +40,15 @@ public class Parts {
         return Types.values()[rand];
     }
 
+    /**
+     * @return Random even number (2-14)
+     */
     public static int getID(){
         int rand = (int)(Math.random()*Types.values().length);
-        return switch (rand){
-            case 0 -> 2;
-            case 1 -> 4;
-            case 2 -> 6;
-            case 3 -> 8;
-            case 4 -> 10;
-            case 5 -> 12;
-            case 6 -> 14;
-            default -> throw new IllegalStateException("Unexpected value: " + rand);
-        };
+        return (rand+1) * 2;
     }
 
+    // listas de coordenadas de las piezas
     private static final List<Coordinates> L = new ArrayList<>(
             Arrays.asList(
                     new Coordinates(7, 0),

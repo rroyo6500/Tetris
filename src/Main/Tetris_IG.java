@@ -130,7 +130,7 @@ public class Tetris_IG extends JFrame {
             public void run() {
                 Tablero.repaint();
             }
-        }, 0, 1000 / 60);
+        }, 0, 1000/60);
     }
 
     public static void stop(){
