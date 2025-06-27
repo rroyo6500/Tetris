@@ -1,4 +1,4 @@
-package Utils;
+package Tetris.Utils;
 
 public class Coordinates {
 

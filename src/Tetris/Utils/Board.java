@@ -1,15 +1,15 @@
-package Utils;
+package Tetris.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board<T> {
+public class Board {
 
-    private final List<List<T>> board;
-    private final T base;
+    private final List<List<Integer>> board;
+    private final int base;
     private final int With, Height;
 
-    public Board(int With, int Heigth, T Base){
+    public Board(int With, int Heigth, int Base){
         this.base = Base;
         this.With = With;
         this.Height = Heigth;
@@ -22,7 +22,7 @@ public class Board<T> {
         }};
     }
 
-    public void setPos(int X, int Y, T newElement){
+    public void setPos(int X, int Y, int newElement){
         try {
             board.get(Y).set(X, newElement);
         } catch (Exception _) {
@@ -30,50 +30,17 @@ public class Board<T> {
         }
     }
 
-    public T getPos(int X, int Y){ return board.get(Y).get(X); }
-    public T getBase(){ return base; }
-    public List<List<T>> getBoard(){ return board; }
+    public int getPos(int X, int Y){ return board.get(Y).get(X); }
+    public int getBase(){ return base; }
+    public List<List<Integer>> getBoard(){ return board; }
     public int getWith(){ return With; }
     public int getHeight(){ return Height; }
 
-    public void moveUp(){
-        for (int i = 0; i < Height; i++) {
-            for (int j = 0; j < With; j++) {
-                try {
-                    board.get(i).set(j, board.get(i + 1).get(j));
-                } catch (Exception _){
-                    board.get(i).set(j, base);
-                }
-            }
-        }
-    }
     public void moveDown(){
         for (int i = (Height - 1); i >= 0; i--) {
             for (int j = 0; j < With; j++) {
                 try {
                     board.get(i).set(j, board.get(i - 1).get(j));
-                } catch (Exception _){
-                    board.get(i).set(j, base);
-                }
-            }
-        }
-    }
-    public void moveLeft(){
-        for (int i = 0; i < Height; i++) {
-            for (int j = 0; j < With; j++) {
-                try {
-                    board.get(i).set(j, board.get(i).get(j + 1));
-                } catch (Exception _){
-                    board.get(i).set(j, base);
-                }
-            }
-        }
-    }
-    public void moveRight(){
-        for (int i = 0; i < Height; i++) {
-            for (int j = (With - 1); j >= 0; j--) {
-                try {
-                    board.get(i).set(j, board.get(i).get(j - 1));
                 } catch (Exception _){
                     board.get(i).set(j, base);
                 }
@@ -95,7 +62,7 @@ public class Board<T> {
     }
 
     public void forEach(){
-        for (List<T> f : board){
+        for (List<Integer> f : board){
             System.out.println(f);
         }
     }
