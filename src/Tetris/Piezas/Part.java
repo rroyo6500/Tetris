@@ -2,7 +2,6 @@ package Tetris.Piezas;
 
 import Tetris.Utils.Coordinates;
 import Tetris.Var;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,29 +10,46 @@ import java.util.List;
 public class Part implements Var, Parts {
 
     public Part() {
-        newPart();
+        newPart(false);
         copyPart();
     }
 
-    @Getter Types nextPart;
     private Types type;
-    @Getter private final List<Coordinates> part = new ArrayList<>();
     private Coordinates center;
+    private final List<Coordinates> part = new ArrayList<>();
+
+    // --------
+
+    private Types nextPart;
+
+    /**
+     * @return Lista de coordenadas de la siguiente pieza
+     */
+    public  Types getNextPart() {
+        return nextPart;
+    }
+
+    // --------
 
     /**
      * Genera una nueva pieza jugable.
      */
-    public void newPart(){
+    public void newPart(boolean copy){
         // Se consigue una nueva pieza jugable (aleatoria de entre las disponibles).
         nextPart = getRandomType();
         assert nextPart != null;
+
+        if (copy) {
+            _board.reset();
+            copyPart();
+        }
     }
 
     /**
      * Copia la pieza pregenerada de 'nextPart'
      */
     public void copyPart(){
-        compLines();
+        clearCompleteLines();
 
         // Copiamos el tipo de pieza de 'nextPart'
         type = nextPart;
@@ -51,15 +67,25 @@ public class Part implements Var, Parts {
         // En caso de no haber si indicara al jugador que la partida ha finalizado.
         for (Coordinates c : part) {
             if ((_board.getPos(c.x(), c.y()) % 2) != 0) {
-                // Añadir codigo que indique al jugador que la partida ha finalizado
+
+                _gameTimer.stopTimers();
+
+                _startButton.setVisible(false);
+                _stopButton.setVisible(false);
+                _gameOverPanel.setVisible(true);
+                _gameOverPanel.repaint();
+
+                break;
             }
         }
 
         // Generamos una nueva pieza en 'nextPart'
-        newPart();
+        newPart(false);
 
         // Pintamos la nueva pieza en el tabblero
         printPart();
+
+        _nextPartPanel.repaint();
     }
 
     // Logica
@@ -77,20 +103,27 @@ public class Part implements Var, Parts {
      * Comprueba si hay lineas completas.
      * En caso de haber las limpia y baja todo el tablero.
      */
-    private void compLines(){
-        // Bucle infinito. Solo esta activo mientras haya lineas completas.
-        while (true) {
+    private void clearCompleteLines(){
+        int countOfLines = 0;
+        for (int y = (_board.getHeight() - 1); y >= 0; y--) {
             int count = 0;
-            for (Integer p : _board.getBoard().getLast()) {
-                if (p != 0) {
+            for (int x = 0; x < _board.getWith(); x++) {
+                if (_board.getPos(x, y) != 0) {
                     count++;
                 }
             }
             if (count == _board.getWith()) {
-                _board.reset(_board.getBoard().size() - 1);
-                _board.moveDown();
-            } else break;
+                _board.reset(y);
+                _board.moveDown(y);
+                countOfLines++;
+
+                y++;
+            }
         }
+
+        _level.addXP(countOfLines);
+        _xpLabel.setText(_level.getXP() + " EXP");
+        _linesLabel.setText(_level.getCompleteLines() + " Lines");
     }
 
     /**
@@ -103,10 +136,10 @@ public class Part implements Var, Parts {
 
     /**
      * Comprueba si la pieza tiene espacio suficiente para moverse / rotar.
-     * @return 'true' si hay espacio suficiente.
-     *         'false' si no hay espacio.
+     * @return 'True' si hay espacio suficiente.
+     *         'False' si no hay espacio.
      */
-    private boolean comp(List<Coordinates> part){
+    private boolean compSpace(List<Coordinates> part){
         boolean comp = true;
 
         // Comprobbamos que las coordenadas no estan ocupadas.
@@ -230,7 +263,7 @@ public class Part implements Var, Parts {
         rotateCoords(resCoord);
 
         // Comprobamos que la pieza puede rotar.
-        if (!comp(resCoord)) {
+        if (!compSpace(resCoord)) {
             printPart();
             return;
         }
@@ -275,12 +308,12 @@ public class Part implements Var, Parts {
 }
 
 interface Parts {
-    int rand = (int)(Math.random()*Types.values().length);
 
     /**
      * @return Random part type from Types enum
      */
     default Types getRandomType(){
+        int rand = (int)(Math.random()*Types.values().length);
         return Types.values()[rand];
     }
 
@@ -291,20 +324,38 @@ interface Parts {
     enum Types{
         L(Parts.L, 2, 2),
         L_Inv(Parts.L_Inv, 4, 3),
-        T(Parts.T, 5, 6),
-        S(Parts.S, 7, 8),
-        Z(Parts.Z, 9, 10),
-        I(Parts.I, 11, 12),
-        Cube(Parts.Cube, 14, null);
+        T(Parts.T, 6, 2),
+        S(Parts.S, 8, 3),
+        Z(Parts.Z, 10, 3),
+        I(Parts.I, 12, 2),
+        Cube(Parts.Cube, 14);
 
-        @Getter private final List<Coordinates> part;
-        @Getter private final int ID;
-        private final int center;
+        private final List<Coordinates> part;
+        private final int ID;
+        private int center;
 
         Types(List<Coordinates> part, int ID, Integer center) {
             this.part = part;
             this.ID = ID;
             this.center = center;
+        }
+        Types(List<Coordinates> part, int ID) {
+            this.part = part;
+            this.ID = ID;
+        }
+
+        /**
+         * @return Lista de coordenadas de la pieza
+         */
+        public List<Coordinates> getPart() {
+            return part;
+        }
+
+        /**
+         * @return ID de la pieza
+         */
+        public int getID() {
+            return ID;
         }
 
         /**

@@ -26,7 +26,19 @@ public class Board {
         try {
             board.get(Y).set(X, newElement);
         } catch (Exception _) {
-            System.out.println("a");
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * @param ListOfCoordinates Lista de coordenadas
+     * @param ID Identificador (Numero que se añadirá al tablero
+     * @param cX Correccion en coordenada X (Izquierda (-) | Derecha (+))
+     * @param cY Correccion en coordenada Y (Arriba (-) | Abajo (+))
+     */
+    public void add(List<Coordinates> ListOfCoordinates, int ID, int cX, int cY){
+        for (Coordinates c : ListOfCoordinates) {
+            setPos((c.x() + cX), (c.y() + cY), ID);
         }
     }
 
@@ -36,8 +48,8 @@ public class Board {
     public int getWith(){ return With; }
     public int getHeight(){ return Height; }
 
-    public void moveDown(){
-        for (int i = (Height - 1); i >= 0; i--) {
+    public void moveDown(int y){
+        for (int i = y; i >= 0; i--) {
             for (int j = 0; j < With; j++) {
                 try {
                     board.get(i).set(j, board.get(i - 1).get(j));
