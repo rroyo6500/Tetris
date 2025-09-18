@@ -16,7 +16,7 @@ public class Part implements Var, Parts {
 
     private Types type;
     private Coordinates center;
-    private final List<Coordinates> part = new ArrayList<>();
+    private final List<Coordinates> PART = new ArrayList<>();
 
     // --------
 
@@ -40,7 +40,7 @@ public class Part implements Var, Parts {
         assert nextPart != null;
 
         if (copy) {
-            _board.reset();
+            BOARD.reset();
             copyPart();
         }
     }
@@ -49,31 +49,51 @@ public class Part implements Var, Parts {
      * Copia la pieza pregenerada de 'nextPart'
      */
     public void copyPart(){
-        clearCompleteLines();
+        // Limpiamos las lineas completadas
+        int countOfLines = 0;
+        for (int y = (BOARD.getHeight() - 1); y >= 0; y--) {
+            int count = 0;
+            for (int x = 0; x < BOARD.getWIDTH(); x++) {
+                if (BOARD.getPos(x, y) != 0) {
+                    count++;
+                }
+            }
+            if (count == BOARD.getWIDTH()) {
+                BOARD.reset(y);
+                BOARD.moveDown(y);
+                countOfLines++;
+
+                y++;
+            }
+        }
+
+        LEVEL.addXP(countOfLines);
+        XP.setText(LEVEL.getXP() + " EXP");
+        COMPLETED_LINES.setText(LEVEL.getCompleteLines() + " Lines");
 
         // Copiamos el tipo de pieza de 'nextPart'
         type = nextPart;
 
         // Limpiamos la anterior pieza y añadimos la nueva.
-        part.clear();
+        PART.clear();
         for (Coordinates c : type.getPart()){
-            part.add(new Coordinates(c.x(), c.y(), c.isCenter()));
+            PART.add(new Coordinates(c.x(), c.y(), c.isCenter()));
         }
 
         // Añadimos el centro de la nueva pieza.
-        center = type.getCenter(part);
+        center = type.getCenter(PART);
 
         // Comprueba si hay espacio dispoible para que aparezca la pieza.
         // En caso de no haber si indicara al jugador que la partida ha finalizado.
-        for (Coordinates c : part) {
-            if ((_board.getPos(c.x(), c.y()) % 2) != 0) {
+        for (Coordinates c : PART) {
+            if ((BOARD.getPos(c.x(), c.y()) % 2) != 0) {
 
-                _gameTimer.stopTimers();
+                GAME_TIMER.stopTimers();
 
-                _startButton.setVisible(false);
-                _stopButton.setVisible(false);
-                _gameOverPanel.setVisible(true);
-                _gameOverPanel.repaint();
+                START_BUTTON.setVisible(false);
+                STOP_BUTTON.setVisible(false);
+                GAMEOVER_PANEL.setVisible(true);
+                GAMEOVER_PANEL.repaint();
 
                 break;
             }
@@ -85,7 +105,7 @@ public class Part implements Var, Parts {
         // Pintamos la nueva pieza en el tabblero
         printPart();
 
-        _nextPartPanel.repaint();
+        NEXT_PART_PANEL.repaint();
     }
 
     // Logica
@@ -95,43 +115,18 @@ public class Part implements Var, Parts {
      */
     private void printPart(){
         // Pintamos la ID de la pieza en las coordenadas de cada uno de los bloques de la pieza (dentro del tabblero).
-        for (Coordinates c : part)
-            _board.setPos(c.x(), c.y(), type.getID());
-    }
-
-    /**
-     * Comprueba si hay lineas completas.
-     * En caso de haber las limpia y baja todo el tablero.
-     */
-    private void clearCompleteLines(){
-        int countOfLines = 0;
-        for (int y = (_board.getHeight() - 1); y >= 0; y--) {
-            int count = 0;
-            for (int x = 0; x < _board.getWith(); x++) {
-                if (_board.getPos(x, y) != 0) {
-                    count++;
-                }
-            }
-            if (count == _board.getWith()) {
-                _board.reset(y);
-                _board.moveDown(y);
-                countOfLines++;
-
-                y++;
-            }
+        for (Coordinates c : PART) {
+            BOARD.setPos(c.x(), c.y(), type.getID());
         }
-
-        _level.addXP(countOfLines);
-        _xpLabel.setText(_level.getXP() + " EXP");
-        _linesLabel.setText(_level.getCompleteLines() + " Lines");
     }
 
     /**
      * Elimina la pieza del tablero.
      */
     private void clearPart(){
-        for (Coordinates c : part)
-            _board.setPos(c.x(), c.y(), _board.getBase());
+        for (Coordinates c : PART) {
+            BOARD.setPos(c.x(), c.y(), BOARD.getBASE());
+        }
     }
 
     /**
@@ -145,8 +140,9 @@ public class Part implements Var, Parts {
         // Comprobbamos que las coordenadas no estan ocupadas.
         for (Coordinates c : part) {
             try{
-                if (_board.getPos(c.x(), c.y()) != 0)
+                if (BOARD.getPos(c.x(), c.y()) != 0) {
                     comp = false;
+                }
             } catch (Exception _) {
                 comp = false;
             }
@@ -159,8 +155,8 @@ public class Part implements Var, Parts {
      * Congela la pieza en su posicion actual y crea una nueva pieza.
      */
     private void freeze(){
-        for (Coordinates c : part) {
-            _board.setPos(c.x(), c.y(), (type.getID() - 1));
+        for (Coordinates c : PART) {
+            BOARD.setPos(c.x(), c.y(), (type.getID() - 1));
         }
         copyPart();
     }
@@ -173,9 +169,9 @@ public class Part implements Var, Parts {
     public void down(){
         clearPart();
 
-        for (Coordinates c : part) {
+        for (Coordinates c : PART) {
             try {
-                if (_board.getPos(c.x(), (c.y() + 1)) != 0) {
+                if (BOARD.getPos(c.x(), (c.y() + 1)) != 0) {
                     freeze();
                     return;
                 }
@@ -185,7 +181,7 @@ public class Part implements Var, Parts {
             }
         }
 
-        for (Coordinates c : part) {
+        for (Coordinates c : PART) {
             c.setY(c.y() + 1);
         }
 
@@ -198,9 +194,9 @@ public class Part implements Var, Parts {
     public void Left(){
         clearPart();
 
-        for (Coordinates c : part) {
+        for (Coordinates c : PART) {
             try {
-                if (_board.getPos((c.x() - 1), c.y()) != 0) {
+                if (BOARD.getPos((c.x() - 1), c.y()) != 0) {
                     printPart();
                     return;
                 }
@@ -210,7 +206,7 @@ public class Part implements Var, Parts {
             }
         }
 
-        for (Coordinates c : part) {
+        for (Coordinates c : PART) {
             c.setX(c.x() - 1);
         }
 
@@ -223,9 +219,9 @@ public class Part implements Var, Parts {
     public void Right(){
         clearPart();
 
-        for (Coordinates c : part) {
+        for (Coordinates c : PART) {
             try {
-                if (_board.getPos((c.x() + 1), c.y()) != 0) {
+                if (BOARD.getPos((c.x() + 1), c.y()) != 0) {
                     printPart();
                     return;
                 }
@@ -235,7 +231,7 @@ public class Part implements Var, Parts {
             }
         }
 
-        for (Coordinates c : part) {
+        for (Coordinates c : PART) {
             c.setX(c.x() + 1);
         }
 
@@ -249,15 +245,14 @@ public class Part implements Var, Parts {
      */
     public void rotate(){
         // Comprobamos que la pieza no es un Cubo (esto no puede rotar)
-        if (type == Types.Cube) {
-            return;
-        }
+        if (type == Types.Cube) return;
+
         // Limpiamos la pieza del tablero
         clearPart();
 
         // Creamos una copia de la piezay rotamos sus coordenadas para comprobar si entra antes de rotar la pieza original.
         List<Coordinates> resCoord = new ArrayList<>();
-        for (Coordinates c : part) {
+        for (Coordinates c : PART) {
             resCoord.add(new Coordinates(c.x(), c.y(), c.isCenter()));
         }
         rotateCoords(resCoord);
@@ -269,7 +264,7 @@ public class Part implements Var, Parts {
         }
 
         // rotamos la pieza original.
-        rotateCoords(part);
+        rotateCoords(PART);
 
         printPart();
     }
@@ -313,8 +308,8 @@ interface Parts {
      * @return Random part type from Types enum
      */
     default Types getRandomType(){
-        int rand = (int)(Math.random()*Types.values().length);
-        return Types.values()[rand];
+        int random = (int)(Math.random()*Types.values().length);
+        return Types.values()[random];
     }
 
     /**
@@ -330,17 +325,17 @@ interface Parts {
         I(Parts.I, 12, 2),
         Cube(Parts.Cube, 14);
 
-        private final List<Coordinates> part;
+        private final List<Coordinates> PART;
         private final int ID;
         private int center;
 
         Types(List<Coordinates> part, int ID, Integer center) {
-            this.part = part;
+            this.PART = part;
             this.ID = ID;
             this.center = center;
         }
         Types(List<Coordinates> part, int ID) {
-            this.part = part;
+            this.PART = part;
             this.ID = ID;
         }
 
@@ -348,7 +343,7 @@ interface Parts {
          * @return Lista de coordenadas de la pieza
          */
         public List<Coordinates> getPart() {
-            return part;
+            return PART;
         }
 
         /**
@@ -381,7 +376,8 @@ interface Parts {
                     new Coordinates(7, 1),
                     new Coordinates(7, 2, true),
                     new Coordinates(8, 2)
-            ));
+            )
+    );
 
     /*
       []
@@ -394,7 +390,8 @@ interface Parts {
                     new Coordinates(7, 1),
                     new Coordinates(6, 2),
                     new Coordinates(7, 2, true)
-            ));
+            )
+    );
 
     /*
       []
@@ -406,7 +403,8 @@ interface Parts {
                     new Coordinates(6, 1),
                     new Coordinates(7, 1, true),
                     new Coordinates(8, 1)
-            ));
+            )
+    );
 
     /*
       [][]
@@ -418,7 +416,8 @@ interface Parts {
                     new Coordinates(8,  0),
                     new Coordinates(6, 1),
                     new Coordinates(7, 1, true)
-            ));
+            )
+    );
 
     /*
     [][]
@@ -430,7 +429,8 @@ interface Parts {
                     new Coordinates(7, 0),
                     new Coordinates(8, 1),
                     new Coordinates(7, 1, true)
-            ));
+            )
+    );
 
     /*
     [][][][]
@@ -441,7 +441,8 @@ interface Parts {
                     new Coordinates(7, 1),
                     new Coordinates(7, 2, true),
                     new Coordinates(7, 3)
-            ));
+            )
+    );
 
     /*
     [][]
@@ -453,6 +454,7 @@ interface Parts {
                     new Coordinates(8, 0),
                     new Coordinates(7, 1),
                     new Coordinates(8, 1)
-            ));
+            )
+    );
 
 }

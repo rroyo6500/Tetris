@@ -5,18 +5,18 @@ import java.util.List;
 
 public class Board {
 
-    private final List<List<Integer>> board;
-    private final int base;
-    private final int With, Height;
+    private final List<List<Integer>> BOARD;
+    private final int BASE;
+    private final int WIDTH, Height;
 
-    public Board(int With, int Heigth, int Base){
-        this.base = Base;
-        this.With = With;
+    public Board(int Width, int Heigth, int Base){
+        this.BASE = Base;
+        this.WIDTH = Width;
         this.Height = Heigth;
-        this.board = new ArrayList<>(){{
+        this.BOARD = new ArrayList<>(){{
             for (int i = 0; i < Heigth; i++) {
                 add(new ArrayList<>(){{
-                    for (int j = 0; j < With; j++) add(Base);
+                    for (int j = 0; j < Width; j++) add(Base);
                 }});
             }
         }};
@@ -24,7 +24,7 @@ public class Board {
 
     public void setPos(int X, int Y, int newElement){
         try {
-            board.get(Y).set(X, newElement);
+            BOARD.get(Y).set(X, newElement);
         } catch (Exception _) {
             throw new IndexOutOfBoundsException();
         }
@@ -42,40 +42,34 @@ public class Board {
         }
     }
 
-    public int getPos(int X, int Y){ return board.get(Y).get(X); }
-    public int getBase(){ return base; }
-    public List<List<Integer>> getBoard(){ return board; }
-    public int getWith(){ return With; }
+    public int getPos(int X, int Y){ return BOARD.get(Y).get(X); }
+    public int getBASE(){ return BASE; }
+    public List<List<Integer>> getBOARD(){ return BOARD; }
+    public int getWIDTH(){ return WIDTH; }
     public int getHeight(){ return Height; }
 
     public void moveDown(int y){
         for (int i = y; i >= 0; i--) {
-            for (int j = 0; j < With; j++) {
+            for (int j = 0; j < WIDTH; j++) {
                 try {
-                    board.get(i).set(j, board.get(i - 1).get(j));
+                    BOARD.get(i).set(j, BOARD.get(i - 1).get(j));
                 } catch (Exception _){
-                    board.get(i).set(j, base);
+                    BOARD.get(i).set(j, BASE);
                 }
             }
         }
     }
 
     public void reset(){
-        for (int i = 0; i < board.size(); i++) {
-            for (int j = 0; j < board.getFirst().size(); j++) {
-                board.get(i).set(j, base);
+        for (int i = 0; i < BOARD.size(); i++) {
+            for (int j = 0; j < BOARD.getFirst().size(); j++) {
+                BOARD.get(i).set(j, BASE);
             }
         }
     }
     public void reset(int y){
-        for (int j = 0; j < board.getFirst().size(); j++) {
-            board.get(y).set(j, base);
-        }
-    }
-
-    public void forEach(){
-        for (List<Integer> f : board){
-            System.out.println(f);
+        for (int j = 0; j < BOARD.getFirst().size(); j++) {
+            BOARD.get(y).set(j, BASE);
         }
     }
 

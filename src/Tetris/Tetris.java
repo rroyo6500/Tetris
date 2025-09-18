@@ -11,41 +11,41 @@ public class Tetris extends JFrame implements Var {
 
         // Game Over
 
-        _gameOverPanel.setBackground(Color.BLACK);
-        _gameOverPanel.setLayout(null);
-        _gameOverPanel.setBounds(5, 200, 575, 300);
-        _gameOverPanel.setVisible(false);
-        add(_gameOverPanel);
+        GAMEOVER_PANEL.setBackground(Color.BLACK);
+        GAMEOVER_PANEL.setLayout(null);
+        GAMEOVER_PANEL.setBounds(5, 200, 575, 300);
+        GAMEOVER_PANEL.setVisible(false);
+        add(GAMEOVER_PANEL);
 
-        JButton goAcceptB = new JButton("Accept");
-        goAcceptB.setBounds(238, 245, 100, 50);
-        goAcceptB.setBackground(Color.GREEN);
-        goAcceptB.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        goAcceptB.addActionListener(_ -> {
+        JButton gameOverAcceptButton = new JButton("Accept");
+        gameOverAcceptButton.setBounds(238, 245, 100, 50);
+        gameOverAcceptButton.setBackground(Color.GREEN);
+        gameOverAcceptButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        gameOverAcceptButton.addActionListener(_ -> {
 
-            _gameTimer.stopTimers();
+            GAME_TIMER.stopTimers();
 
-            _startButton.setVisible(true);
-            _stopButton.setVisible(true);
-            _gameOverPanel.setVisible(false);
+            START_BUTTON.setVisible(true);
+            STOP_BUTTON.setVisible(true);
+            GAMEOVER_PANEL.setVisible(false);
 
         });
-        _gameOverPanel.add(goAcceptB);
+        GAMEOVER_PANEL.add(gameOverAcceptButton);
 
         // Game
 
         JPanel panel = getJPanel();
         add(panel);
 
-        _gamePanel.setBounds(10, 25, 300, 600);
-        _gamePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        _gamePanel.setFocusable(true);
-        _gamePanel.requestFocusInWindow();
-        panel.add(_gamePanel);
+        GAME_PANEL.setBounds(10, 25, 300, 600);
+        GAME_PANEL.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        GAME_PANEL.setFocusable(true);
+        GAME_PANEL.requestFocusInWindow();
+        panel.add(GAME_PANEL);
 
-        _nextPartPanel.setBounds(320, 25, 250, 200);
-        _nextPartPanel.setBackground(Color.BLACK);
-        panel.add(_nextPartPanel);
+        NEXT_PART_PANEL.setBounds(320, 25, 250, 200);
+        NEXT_PART_PANEL.setBackground(Color.BLACK);
+        panel.add(NEXT_PART_PANEL);
 
         JPanel xpBackground = new JPanel();
         xpBackground.setBackground(Color.BLACK);
@@ -53,19 +53,19 @@ public class Tetris extends JFrame implements Var {
         xpBackground.setBounds(320, 606, 248, 19);
         panel.add(xpBackground);
 
-        _xpLabel.setBounds(10, 0, 248, 19);
-        _xpLabel.setForeground(Color.WHITE);
-        xpBackground.add(_xpLabel);
+        XP.setBounds(10, 0, 248, 19);
+        XP.setForeground(Color.WHITE);
+        xpBackground.add(XP);
 
-        JPanel LvLBackground = new JPanel();
-        LvLBackground.setBackground(Color.BLACK);
-        LvLBackground.setLayout(null);
-        LvLBackground.setBounds(320, 577, 44, 19);
-        panel.add(LvLBackground);
+        JPanel lvlBackground = new JPanel();
+        lvlBackground.setBackground(Color.BLACK);
+        lvlBackground.setLayout(null);
+        lvlBackground.setBounds(320, 577, 44, 19);
+        panel.add(lvlBackground);
 
-        _levelLabel.setBounds(3, 0, 44, 19);
-        _levelLabel.setForeground(Color.WHITE);
-        LvLBackground.add(_levelLabel);
+        LEVEL_LABEL.setBounds(3, 0, 44, 19);
+        LEVEL_LABEL.setForeground(Color.WHITE);
+        lvlBackground.add(LEVEL_LABEL);
 
         JPanel linesBackground = new JPanel();
         linesBackground.setBackground(Color.BLACK);
@@ -73,49 +73,49 @@ public class Tetris extends JFrame implements Var {
         linesBackground.setBounds(425, 577, 100, 19);
         panel.add(linesBackground);
 
-        _linesLabel.setBounds(10, 0, 100, 19);
-        _linesLabel.setForeground(Color.WHITE);
-        linesBackground.add(_linesLabel);
+        COMPLETED_LINES.setBounds(10, 0, 100, 19);
+        COMPLETED_LINES.setForeground(Color.WHITE);
+        linesBackground.add(COMPLETED_LINES);
 
         // Botones
         // Iniciar Juego / Detener Juego
 
-        _startButton.setBounds(320, 250, 250, 50);
-        _startButton.setBackground(Color.GREEN);
-        _startButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        _startButton.addActionListener(_ -> {
-            if (!_gameTimer.isStarted()){
-                _gamePanel.requestFocusInWindow();
-                _gameTimer.startGame();
+        START_BUTTON.setBounds(320, 250, 250, 50);
+        START_BUTTON.setBackground(Color.GREEN);
+        START_BUTTON.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        START_BUTTON.addActionListener(_ -> {
+            if (!GAME_TIMER.isStarted()){
+                GAME_PANEL.requestFocusInWindow();
+                GAME_TIMER.startGame();
             }
         });
-        panel.add(_startButton);
+        panel.add(START_BUTTON);
 
-        _stopButton.setBounds(320, 325, 250, 50);
-        _stopButton.setBackground(Color.RED);
-        _stopButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        _stopButton.addActionListener(_ -> {
-            if (_gameTimer.isStarted()){
-                _gameTimer.stopTimers();
+        STOP_BUTTON.setBounds(320, 325, 250, 50);
+        STOP_BUTTON.setBackground(Color.RED);
+        STOP_BUTTON.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        STOP_BUTTON.addActionListener(_ -> {
+            if (GAME_TIMER.isStarted()){
+                GAME_TIMER.stopTimers();
             }
         });
-        panel.add(_stopButton);
+        panel.add(STOP_BUTTON);
 
         // Movimiento Pieza
 
-        _gamePanel.addKeyListener(new KeyAdapter() {
+        GAME_PANEL.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
 
                 if (e.getKeyCode() == 40) {
-                    _part.down();
+                    PART.down();
                 } else if (e.getKeyCode() == 39) {
-                    _part.Right();
+                    PART.Right();
                 } else if (e.getKeyCode() == 37) {
-                    _part.Left();
+                    PART.Left();
                 } else if (e.getKeyCode() == 38) {
-                    _part.rotate();
+                    PART.rotate();
                 }
 
             }

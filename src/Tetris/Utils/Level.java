@@ -4,14 +4,15 @@ import Tetris.Var;
 
 public class Level implements Var {
 
-    private final int maxLevel;
-    public Level(int maxLevel) {
-        this.maxLevel = maxLevel;
+    private final int MAX_LEVEL;
+    private int velocity;
+    public Level(int maxLevel, int velocity) {
+        this.MAX_LEVEL = maxLevel;
+        this.velocity = velocity;
     }
 
     private int xP = 0;
     private int actualLevel = 1;
-    private int velocity = 1000;
     private int completeLines = 0;
 
     /**
@@ -36,12 +37,12 @@ public class Level implements Var {
      * @param xP xP conseguida
      */
     private void levelUp(int xP) {
-        while (xP >= (1800 * actualLevel) && actualLevel != maxLevel) {
+        while (xP >= (1800 * actualLevel) && actualLevel != MAX_LEVEL) {
             velocity -= 20;
             actualLevel++;
 
-            _levelLabel.setText("LvL " + getActualLevel());
-            _gameTimer.restartTimers();
+            LEVEL_LABEL.setText("LvL " + getActualLevel());
+            GAME_TIMER.restartTimers();
         }
     }
 
@@ -69,9 +70,9 @@ public class Level implements Var {
         actualLevel = 1;
         xP = 0;
         completeLines = 0;
-        _xpLabel.setText("XP: 0");
-        _levelLabel.setText("LvL 1");
-        _linesLabel.setText("0 Lines");
+        XP.setText("XP: 0");
+        LEVEL_LABEL.setText("LvL 1");
+        COMPLETED_LINES.setText("0 Lines");
     }
 
 }

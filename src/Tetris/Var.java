@@ -15,19 +15,19 @@ public interface Var {
     // --------
     // Interfaz Grafica
 
-    JLabel _xpLabel = new JLabel();
-    JLabel _levelLabel = new JLabel("LvL 1");
-    JLabel _linesLabel = new JLabel();
+    JLabel XP = new JLabel();
+    JLabel LEVEL_LABEL = new JLabel("LvL 1");
+    JLabel COMPLETED_LINES = new JLabel();
 
-    JButton _startButton = new JButton("Start");
-    JButton _stopButton = new JButton("Stop");
+    JButton START_BUTTON = new JButton("Start");
+    JButton STOP_BUTTON = new JButton("Stop");
 
-    JPanel _gamePanel = new JPanel(){
+    JPanel GAME_PANEL = new JPanel(){
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
             int x = 0, y = 0;
-            for (List<Integer> f : _board.getBoard()){
+            for (List<Integer> f : BOARD.getBOARD()){
                 for (Integer c : f){
 
                     switch (c){
@@ -52,21 +52,21 @@ public interface Var {
         }
     };
 
-    JPanel _nextPartPanel = new JPanel(){
+    JPanel NEXT_PART_PANEL = new JPanel(){
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
             Board b_Next = new Board(3, 4, 0);
-            b_Next.add(_part.getNextPart().getPart(), _part.getNextPart().getID(), -6, 0);
+            b_Next.add(PART.getNextPart().getPart(), PART.getNextPart().getID(), -6, 0);
 
-            int x, y = switch (_part.getNextPart()){
+            int x, y = switch (PART.getNextPart()){
                 case L, L_Inv -> 62;
                 case T, S, Z, Cube -> 75;
                 case I -> 50;
             };
-            for (List<Integer> f : b_Next.getBoard()){
+            for (List<Integer> f : b_Next.getBOARD()){
 
-                x = switch (_part.getNextPart()){
+                x = switch (PART.getNextPart()){
                     case L, Cube -> 75;
                     case L_Inv, T, S, Z, I -> 87;
                 };
@@ -94,7 +94,7 @@ public interface Var {
         }
     };
 
-    JPanel _gameOverPanel = new JPanel(){
+    JPanel GAMEOVER_PANEL = new JPanel(){
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
@@ -242,63 +242,63 @@ public interface Var {
 
     // Variables Principales
 
-    Board _board = new Board(15, 30, 0);
-    Level _level = new Level(50);
-    Part _part = new Part();
+    Board BOARD = new Board(15, 30, 0);
+    Level LEVEL = new Level(50, 1000);
+    Part PART = new Part();
 
     // Timers
 
-    GameTimers _gameTimer = new GameTimers();
+    GameTimers GAME_TIMER = new GameTimers();
 
     class GameTimers {
 
         public GameTimers(){}
 
-        private Timer _gameTimer = new Timer();
-        private Timer _fpsTimer = new Timer();
+        private Timer gameTimer = new Timer();
+        private Timer fpsTimer = new Timer();
 
         private boolean isStarted = false;
 
         public void startGame() {
             isStarted = true;
 
-            _fpsTimer.schedule(new TimerTask() {
+            fpsTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    _gamePanel.repaint();
+                    GAME_PANEL.repaint();
                 }
             }, 0, 1000 / 60);
 
-            _gameTimer.schedule(new TimerTask() {
+            gameTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    _part.down();
+                    PART.down();
                 }
-            }, 0 , _level.getVelocity());
+            }, 0 , LEVEL.getVelocity());
         }
 
         public void restartTimers(){
-            _fpsTimer.cancel();
-            _gameTimer.cancel();
+            fpsTimer.cancel();
+            gameTimer.cancel();
 
-            _fpsTimer = new Timer();
-            _gameTimer = new Timer();
+            fpsTimer = new Timer();
+            gameTimer = new Timer();
 
             startGame();
         }
 
         public void stopTimers() {
-            _gameTimer.cancel();
-            _fpsTimer.cancel();
+            gameTimer.cancel();
+            fpsTimer.cancel();
 
-            _fpsTimer = new Timer();
-            _gameTimer = new Timer();
+            fpsTimer = new Timer();
+            gameTimer = new Timer();
 
             isStarted = false;
 
-            _level.restart();
-            _part.newPart(true);
-            _gamePanel.repaint();
+            LEVEL.restart();
+            PART.newPart(true);
+            GAME_PANEL.repaint();
         }
 
         public boolean isStarted() {
