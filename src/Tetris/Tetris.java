@@ -17,6 +17,21 @@ public class Tetris extends JFrame implements Var {
         _gameOverPanel.setVisible(false);
         add(_gameOverPanel);
 
+        JButton goAcceptB = new JButton("Accept");
+        goAcceptB.setBounds(238, 245, 100, 50);
+        goAcceptB.setBackground(Color.GREEN);
+        goAcceptB.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        goAcceptB.addActionListener(_ -> {
+
+            _gameTimer.stopTimers();
+
+            _startButton.setVisible(true);
+            _stopButton.setVisible(true);
+            _gameOverPanel.setVisible(false);
+
+        });
+        _gameOverPanel.add(goAcceptB);
+
         // Game
 
         JPanel panel = getJPanel();
