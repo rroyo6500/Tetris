@@ -111,9 +111,9 @@ public class Tetris extends JFrame implements Var {
                 if (e.getKeyCode() == 40) {
                     PART.down();
                 } else if (e.getKeyCode() == 39) {
-                    PART.Right();
+                    PART.right();
                 } else if (e.getKeyCode() == 37) {
-                    PART.Left();
+                    PART.left();
                 } else if (e.getKeyCode() == 38) {
                     PART.rotate();
                 }

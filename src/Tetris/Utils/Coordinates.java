@@ -27,5 +27,5 @@ public class Coordinates {
         Y = y;
     }
 
-    public boolean isIS_CENTER(){ return IS_CENTER; }
+    public boolean isCenter(){ return IS_CENTER; }
 }

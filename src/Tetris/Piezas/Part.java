@@ -36,7 +36,7 @@ public class Part implements Var, Parts {
      */
     public void newPart(boolean copy){
         // Se consigue una nueva pieza jugable (aleatoria de entre las disponibles).
-        nextPart = getRandomType();
+        nextPart = Types.values()[((int)(Math.random()*Types.values().length))];
         assert nextPart != null;
 
         if (copy) {
@@ -77,7 +77,7 @@ public class Part implements Var, Parts {
         // Limpiamos la anterior pieza y añadimos la nueva.
         PART.clear();
         for (Coordinates c : type.getPart()){
-            PART.add(new Coordinates(c.x(), c.y(), c.isIS_CENTER()));
+            PART.add(new Coordinates(c.x(), c.y(), c.isCenter()));
         }
 
         // Añadimos el centro de la nueva pieza.
@@ -130,28 +130,6 @@ public class Part implements Var, Parts {
     }
 
     /**
-     * Comprueba si la pieza tiene espacio suficiente para moverse / rotar.
-     * @return 'True' si hay espacio suficiente.
-     *         'False' si no hay espacio.
-     */
-    private boolean compSpace(List<Coordinates> part){
-        boolean comp = true;
-
-        // Comprobbamos que las coordenadas no estan ocupadas.
-        for (Coordinates c : part) {
-            try{
-                if (BOARD.getPos(c.x(), c.y()) != 0) {
-                    comp = false;
-                }
-            } catch (Exception _) {
-                comp = false;
-            }
-        }
-
-        return comp;
-    }
-
-    /**
      * Congela la pieza en su posicion actual y crea una nueva pieza.
      */
     private void freeze(){
@@ -191,7 +169,7 @@ public class Part implements Var, Parts {
     /**
      * Mueve la pieza actual 1 hacia la izquierda en el tablero.
      */
-    public void Left(){
+    public void left(){
         clearPart();
 
         for (Coordinates c : PART) {
@@ -216,7 +194,7 @@ public class Part implements Var, Parts {
     /**
      * Mueve la pieza actual 1 hacia la derecha en el tablero.
      */
-    public void Right(){
+    public void right(){
         clearPart();
 
         for (Coordinates c : PART) {
@@ -253,12 +231,26 @@ public class Part implements Var, Parts {
         // Creamos una copia de la piezay rotamos sus coordenadas para comprobar si entra antes de rotar la pieza original.
         List<Coordinates> resCoord = new ArrayList<>();
         for (Coordinates c : PART) {
-            resCoord.add(new Coordinates(c.x(), c.y(), c.isIS_CENTER()));
+            resCoord.add(new Coordinates(c.x(), c.y(), c.isCenter()));
         }
         rotateCoords(resCoord);
 
+        // Comprobamos si la pieza tiene suficiente espacio para rotar
+        boolean comp = false;
+
+        // Comprobbamos que las coordenadas no estan ocupadas.
+        for (Coordinates c : resCoord) {
+            try{
+                if (BOARD.getPos(c.x(), c.y()) != 0) {
+                    comp = true;
+                }
+            } catch (Exception _) {
+                comp = true;
+            }
+        }
+
         // Comprobamos que la pieza puede rotar.
-        if (!compSpace(resCoord)) {
+        if (comp) {
             printPart();
             return;
         }
@@ -275,7 +267,7 @@ public class Part implements Var, Parts {
      */
     private void rotateCoords(List<Coordinates> matrix){
         for (Coordinates c : matrix) {
-            if (!c.isIS_CENTER()) {
+            if (!c.isCenter()) {
                 switch (type) {
                     case S, Z: {
                         if (c.x() == (center.x()-1) && c.y() == (center.y()-1)) c.setCoords(center.x() + 1, c.y());
@@ -303,14 +295,6 @@ public class Part implements Var, Parts {
 }
 
 interface Parts {
-
-    /**
-     * @return Random part type from Types enum
-     */
-    default Types getRandomType(){
-        int random = (int)(Math.random()*Types.values().length);
-        return Types.values()[random];
-    }
 
     /**
      * Lista de piezas jugables.
