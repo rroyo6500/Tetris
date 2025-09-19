@@ -6,38 +6,29 @@ public class Level implements Var {
 
     private final int MAX_LEVEL;
     private int velocity;
+    private int xp = 0;
+    private int actualLevel = 1;
+    private int completeLines = 0;
+
     public Level(int maxLevel, int velocity) {
         this.MAX_LEVEL = maxLevel;
         this.velocity = velocity;
     }
 
-    private int xP = 0;
-    private int actualLevel = 1;
-    private int completeLines = 0;
-
     /**
      * Aumenta los puntos conseguidos basándose en las líneas completadas (seguidas)
+     * y aumenta el nivel y velocidad del juego
      * @param completeLines Cantidad de líneas completadas de una sola vez
      */
     public void addXP(int completeLines) {
-        int xp = 0;
         if (completeLines >= 4) {
             xp += (150 * 8);
         } else {
             xp += (150 * completeLines);
         }
-        xP += xp;
         this.completeLines += completeLines;
 
-        levelUp(xP);
-    }
-
-    /**
-     * Aumenta el nivel
-     * @param xP xP conseguida
-     */
-    private void levelUp(int xP) {
-        while (xP >= (1800 * actualLevel) && actualLevel != MAX_LEVEL) {
+        while (xp >= (1800 * actualLevel) && actualLevel != MAX_LEVEL) {
             velocity -= 20;
             actualLevel++;
 
@@ -55,7 +46,7 @@ public class Level implements Var {
     }
 
     public int getXP() {
-        return xP;
+        return xp;
     }
 
     public int getCompleteLines() {
@@ -68,7 +59,7 @@ public class Level implements Var {
     public void restart() {
         velocity = 1000;
         actualLevel = 1;
-        xP = 0;
+        xp = 0;
         completeLines = 0;
         XP.setText("XP: 0");
         LEVEL_LABEL.setText("LvL 1");

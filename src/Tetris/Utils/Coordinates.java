@@ -3,18 +3,18 @@ package Tetris.Utils;
 public class Coordinates {
 
     private int X, Y;
-    private boolean isCenter;
+    private final boolean IS_CENTER;
 
     public Coordinates(int x, int y){
         this.X = x;
         this.Y = y;
-        this.isCenter = false;
+        this.IS_CENTER = false;
     }
 
     public Coordinates(int x, int y, boolean isCenter){
         this.X = x;
         this.Y = y;
-        this.isCenter = isCenter;
+        this.IS_CENTER = isCenter;
     }
 
     public int x(){ return X; }
@@ -27,7 +27,5 @@ public class Coordinates {
         Y = y;
     }
 
-    public boolean isCenter(){ return isCenter; }
-    public void setCenter(boolean center){ isCenter = center; }
-
+    public boolean isIS_CENTER(){ return IS_CENTER; }
 }

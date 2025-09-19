@@ -51,7 +51,7 @@ public class Part implements Var, Parts {
     public void copyPart(){
         // Limpiamos las lineas completadas
         int countOfLines = 0;
-        for (int y = (BOARD.getHeight() - 1); y >= 0; y--) {
+        for (int y = (BOARD.getHEIGHT() - 1); y >= 0; y--) {
             int count = 0;
             for (int x = 0; x < BOARD.getWIDTH(); x++) {
                 if (BOARD.getPos(x, y) != 0) {
@@ -77,7 +77,7 @@ public class Part implements Var, Parts {
         // Limpiamos la anterior pieza y añadimos la nueva.
         PART.clear();
         for (Coordinates c : type.getPart()){
-            PART.add(new Coordinates(c.x(), c.y(), c.isCenter()));
+            PART.add(new Coordinates(c.x(), c.y(), c.isIS_CENTER()));
         }
 
         // Añadimos el centro de la nueva pieza.
@@ -253,7 +253,7 @@ public class Part implements Var, Parts {
         // Creamos una copia de la piezay rotamos sus coordenadas para comprobar si entra antes de rotar la pieza original.
         List<Coordinates> resCoord = new ArrayList<>();
         for (Coordinates c : PART) {
-            resCoord.add(new Coordinates(c.x(), c.y(), c.isCenter()));
+            resCoord.add(new Coordinates(c.x(), c.y(), c.isIS_CENTER()));
         }
         rotateCoords(resCoord);
 
@@ -275,7 +275,7 @@ public class Part implements Var, Parts {
      */
     private void rotateCoords(List<Coordinates> matrix){
         for (Coordinates c : matrix) {
-            if (!c.isCenter()) {
+            if (!c.isIS_CENTER()) {
                 switch (type) {
                     case S, Z: {
                         if (c.x() == (center.x()-1) && c.y() == (center.y()-1)) c.setCoords(center.x() + 1, c.y());

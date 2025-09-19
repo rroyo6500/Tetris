@@ -7,12 +7,12 @@ public class Board {
 
     private final List<List<Integer>> BOARD;
     private final int BASE;
-    private final int WIDTH, Height;
+    private final int WIDTH, HEIGHT;
 
     public Board(int Width, int Heigth, int Base){
         this.BASE = Base;
         this.WIDTH = Width;
-        this.Height = Heigth;
+        this.HEIGHT = Heigth;
         this.BOARD = new ArrayList<>(){{
             for (int i = 0; i < Heigth; i++) {
                 add(new ArrayList<>(){{
@@ -46,7 +46,7 @@ public class Board {
     public int getBASE(){ return BASE; }
     public List<List<Integer>> getBOARD(){ return BOARD; }
     public int getWIDTH(){ return WIDTH; }
-    public int getHeight(){ return Height; }
+    public int getHEIGHT(){ return HEIGHT; }
 
     public void moveDown(int y){
         for (int i = y; i >= 0; i--) {
