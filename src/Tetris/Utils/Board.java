@@ -22,6 +22,12 @@ public class Board {
         }};
     }
 
+    /**
+     * Añade un nuevo elemento en la posicion indicada
+     * @param X Coordenada X en el tablero
+     * @param Y Coordenada Y en el tablero
+     * @param newElement Nuevo elemento
+     */
     public void setPos(int X, int Y, int newElement){
         try {
             BOARD.get(Y).set(X, newElement);
@@ -31,8 +37,9 @@ public class Board {
     }
 
     /**
+     * Añade una lista de cordenadas al tablero. Permite modificar las coordenadas para ubicarlas en el hueco deseado.
      * @param ListOfCoordinates Lista de coordenadas
-     * @param ID Identificador (Numero que se añadirá al tablero
+     * @param ID Identificador (Numero que se añadirá al tablero)
      * @param cX Correccion en coordenada X (Izquierda (-) | Derecha (+))
      * @param cY Correccion en coordenada Y (Arriba (-) | Abajo (+))
      */
@@ -48,6 +55,10 @@ public class Board {
     public int getWIDTH(){ return WIDTH; }
     public int getHEIGHT(){ return HEIGHT; }
 
+    /**
+     * Mueve el tablero hacia abajo
+     * @param y numero de veces que se movera
+     */
     public void moveDown(int y){
         for (int i = y; i >= 0; i--) {
             for (int j = 0; j < WIDTH; j++) {
@@ -60,6 +71,9 @@ public class Board {
         }
     }
 
+    /**
+     * Reinicia el tablero entero
+     */
     public void reset(){
         for (int i = 0; i < BOARD.size(); i++) {
             for (int j = 0; j < BOARD.getFirst().size(); j++) {
@@ -67,6 +81,11 @@ public class Board {
             }
         }
     }
+
+    /**
+     * Reinicia una fila del tablero
+     * @param y Fila a reiniciar
+     */
     public void reset(int y){
         for (int j = 0; j < BOARD.getFirst().size(); j++) {
             BOARD.get(y).set(j, BASE);

@@ -46,10 +46,10 @@ public class Part implements Var, Parts {
     }
 
     /**
-     * Copia la pieza pregenerada de 'nextPart'
+     * Copia la pieza pregenerada de 'nextPart' y Limpiamos las líneas completas en caso de haber
      */
     public void copyPart(){
-        // Limpiamos las lineas completadas
+        // Limpiamos las líneas completadas en caso de haber
         int countOfLines = 0;
         for (int y = (BOARD.getHEIGHT() - 1); y >= 0; y--) {
             int count = 0;
@@ -62,7 +62,6 @@ public class Part implements Var, Parts {
                 BOARD.reset(y);
                 BOARD.moveDown(y);
                 countOfLines++;
-
                 y++;
             }
         }
@@ -142,14 +141,15 @@ public class Part implements Var, Parts {
     // Movimiento
 
     /**
-     * Mueve la pieza actual 1 hacia abajo en el tablero. Al colisionar congela la pieza.
+     * Mueve la pieza actual +1 en la coordenada Y (Abajo).
+     * Al colisionar con una pieza anterior o el borde inferior del tablero congela la pieza.
      */
     public void down(){
         clearPart();
 
         for (Coordinates c : PART) {
             try {
-                if (BOARD.getPos(c.x(), (c.y() + 1)) != 0) {
+                if ((BOARD.getPos(c.x(), (c.y() + 1)) != 0)) {
                     freeze();
                     return;
                 }
@@ -167,7 +167,7 @@ public class Part implements Var, Parts {
     }
 
     /**
-     * Mueve la pieza actual 1 hacia la izquierda en el tablero.
+     * Mueve la pieza actual -1 en la coordenada X (Izquierda).
      */
     public void left(){
         clearPart();
@@ -192,7 +192,7 @@ public class Part implements Var, Parts {
     }
 
     /**
-     * Mueve la pieza actual 1 hacia la derecha en el tablero.
+     * Mueve la pieza actual +1 en la coordenada X (Derecha).
      */
     public void right(){
         clearPart();
@@ -222,23 +222,21 @@ public class Part implements Var, Parts {
      * Rota la pieza 90º ( ↻ ).
      */
     public void rotate(){
-        // Comprobamos que la pieza no es un Cubo (esto no puede rotar)
+        // Comprobamos que la pieza no es un Cubo (este no puede rotar)
         if (type == Types.Cube) return;
 
         // Limpiamos la pieza del tablero
         clearPart();
 
-        // Creamos una copia de la piezay rotamos sus coordenadas para comprobar si entra antes de rotar la pieza original.
+        // Creamos una copia de la pieza y rotamos sus coordenadas para comprobar si entra antes de rotar la pieza original.
         List<Coordinates> resCoord = new ArrayList<>();
         for (Coordinates c : PART) {
             resCoord.add(new Coordinates(c.x(), c.y(), c.isCenter()));
         }
         rotateCoords(resCoord);
 
-        // Comprobamos si la pieza tiene suficiente espacio para rotar
+        // Comprobamos que las coordenadas no esten ocupadas.
         boolean comp = false;
-
-        // Comprobbamos que las coordenadas no estan ocupadas.
         for (Coordinates c : resCoord) {
             try{
                 if (BOARD.getPos(c.x(), c.y()) != 0) {
@@ -249,15 +247,16 @@ public class Part implements Var, Parts {
             }
         }
 
-        // Comprobamos que la pieza puede rotar.
+        // Comprobamos que la pieza puede rotar. En caso de que no (comp == true) se vuelve a pintar la pieza sin rotar.
         if (comp) {
             printPart();
             return;
         }
 
-        // rotamos la pieza original.
+        // Rotamos la pieza original.
         rotateCoords(PART);
 
+        // Pintamos la pieza rotada
         printPart();
     }
 

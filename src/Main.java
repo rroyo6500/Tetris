@@ -1,7 +1,6 @@
 import Tetris.Tetris;
-import Tetris.Var;
 
-public class Main implements Var {
+public class Main {
     public static void main(String[] args){
         new Tetris();
     }

@@ -56,15 +56,16 @@ public interface Var {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            Board b_Next = new Board(3, 4, 0);
-            b_Next.add(PART.getNextPart().getPart(), PART.getNextPart().getID(), -6, 0);
+            Board bNext = new Board(3, 4, 0);
+            bNext.add(PART.getNextPart().getPart(), PART.getNextPart().getID(), -6, 0);
 
             int x, y = switch (PART.getNextPart()){
                 case L, L_Inv -> 62;
                 case T, S, Z, Cube -> 75;
                 case I -> 50;
             };
-            for (List<Integer> f : b_Next.getBOARD()){
+
+            for (List<Integer> f : bNext.getBOARD()){
 
                 x = switch (PART.getNextPart()){
                     case L, Cube -> 75;
@@ -83,7 +84,6 @@ public interface Var {
                         case 14 -> g.setColor(Color.YELLOW);
                         default -> g.setColor(Color.BLACK);
                     }
-
                     g.fillRect(x, y, 26, 26);
 
                     x += 26;
