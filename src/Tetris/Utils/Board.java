@@ -24,13 +24,13 @@ public class Board {
 
     /**
      * Añade un nuevo elemento en la posicion indicada
-     * @param X Coordenada X en el tablero
-     * @param Y Coordenada Y en el tablero
+     * @param x Coordenada x en el tablero
+     * @param y Coordenada y en el tablero
      * @param newElement Nuevo elemento
      */
-    public void setPos(int X, int Y, int newElement){
+    public void setPos(int x, int y, int newElement){
         try {
-            BOARD.get(Y).set(X, newElement);
+            BOARD.get(y).set(x, newElement);
         } catch (Exception _) {
             throw new IndexOutOfBoundsException();
         }
@@ -38,18 +38,19 @@ public class Board {
 
     /**
      * Añade una lista de cordenadas al tablero. Permite modificar las coordenadas para ubicarlas en el hueco deseado.
-     * @param ListOfCoordinates Lista de coordenadas
-     * @param ID Identificador (Numero que se añadirá al tablero)
-     * @param cX Correccion en coordenada X (Izquierda (-) | Derecha (+))
-     * @param cY Correccion en coordenada Y (Arriba (-) | Abajo (+))
+     *
+     * @param listOfCoordinates Lista de coordenadas
+     * @param id                Identificador (Numero que se añadirá al tablero)
+     * @param cX                Correccion en coordenada X (Izquierda (-) | Derecha (+))
+     * @param cY                Correccion en coordenada Y (Arriba (-) | Abajo (+))
      */
-    public void add(List<Coordinates> ListOfCoordinates, int ID, int cX, int cY){
-        for (Coordinates c : ListOfCoordinates) {
-            setPos((c.x() + cX), (c.y() + cY), ID);
+    public void add(List<Coordinates> listOfCoordinates, int id, int cX, int cY){
+        for (Coordinates c : listOfCoordinates) {
+            setPos((c.x() + cX), (c.y() + cY), id);
         }
     }
 
-    public int getPos(int X, int Y){ return BOARD.get(Y).get(X); }
+    public int getPos(int x, int y){ return BOARD.get(y).get(x); }
     public int getBASE(){ return BASE; }
     public List<List<Integer>> getBOARD(){ return BOARD; }
     public int getWIDTH(){ return WIDTH; }

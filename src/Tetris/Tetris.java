@@ -23,7 +23,7 @@ public class Tetris extends JFrame implements Var {
         gameOverAcceptButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         gameOverAcceptButton.addActionListener(_ -> {
 
-            GAME_TIMER.stopTimers();
+            GameTimers.stopTimers();
 
             START_BUTTON.setVisible(true);
             STOP_BUTTON.setVisible(true);
@@ -84,9 +84,9 @@ public class Tetris extends JFrame implements Var {
         START_BUTTON.setBackground(Color.GREEN);
         START_BUTTON.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         START_BUTTON.addActionListener(_ -> {
-            if (!GAME_TIMER.isStarted()){
+            if (!GameTimers.isStarted()){
                 GAME_PANEL.requestFocusInWindow();
-                GAME_TIMER.startGame();
+                GameTimers.startGame();
             }
         });
         panel.add(START_BUTTON);
@@ -95,8 +95,8 @@ public class Tetris extends JFrame implements Var {
         STOP_BUTTON.setBackground(Color.RED);
         STOP_BUTTON.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         STOP_BUTTON.addActionListener(_ -> {
-            if (GAME_TIMER.isStarted()){
-                GAME_TIMER.stopTimers();
+            if (GameTimers.isStarted()){
+                GameTimers.stopTimers();
             }
         });
         panel.add(STOP_BUTTON);

@@ -48,7 +48,6 @@ public interface Var {
                 x = 0;
                 y += 20;
             }
-
         }
     };
 
@@ -60,7 +59,7 @@ public interface Var {
             bNext.add(PART.getNextPart().getPart(), PART.getNextPart().getID(), -6, 0);
 
             int x, y = switch (PART.getNextPart()){
-                case L, L_Inv -> 62;
+                case L, J -> 62;
                 case T, S, Z, Cube -> 75;
                 case I -> 50;
             };
@@ -69,7 +68,7 @@ public interface Var {
 
                 x = switch (PART.getNextPart()){
                     case L, Cube -> 75;
-                    case L_Inv, T, S, Z, I -> 87;
+                    case J, T, S, Z, I -> 87;
                 };
 
                 for (Integer c : f){
@@ -90,7 +89,6 @@ public interface Var {
                 }
                 y += 26;
             }
-
         }
     };
 
@@ -248,18 +246,16 @@ public interface Var {
 
     // Timers
 
-    GameTimers GAME_TIMER = new GameTimers();
-
     class GameTimers {
 
         public GameTimers(){}
 
-        private Timer gameTimer = new Timer();
-        private Timer fpsTimer = new Timer();
+        private static Timer gameTimer = new Timer();
+        private static Timer fpsTimer = new Timer();
 
-        private boolean isStarted = false;
+        private static boolean isStarted = false;
 
-        public void startGame() {
+        public static void startGame() {
             isStarted = true;
 
             fpsTimer.schedule(new TimerTask() {
@@ -274,10 +270,10 @@ public interface Var {
                 public void run() {
                     PART.down();
                 }
-            }, 0 , LEVEL.getVelocity());
+            }, 0 , (LEVEL.getVelocity() + 1));
         }
 
-        public void restartTimers(){
+        public static void restartTimers(){
             fpsTimer.cancel();
             gameTimer.cancel();
 
@@ -287,7 +283,7 @@ public interface Var {
             startGame();
         }
 
-        public void stopTimers() {
+        public static void stopTimers() {
             gameTimer.cancel();
             fpsTimer.cancel();
 
@@ -301,10 +297,9 @@ public interface Var {
             GAME_PANEL.repaint();
         }
 
-        public boolean isStarted() {
+        public static boolean isStarted() {
             return isStarted;
         }
 
     }
-
 }

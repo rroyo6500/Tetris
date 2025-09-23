@@ -68,7 +68,7 @@ public class Part implements Var, Parts {
 
         LEVEL.addXP(countOfLines);
         XP.setText(LEVEL.getXP() + " EXP");
-        COMPLETED_LINES.setText(LEVEL.getCompleteLines() + " Lines");
+        COMPLETED_LINES.setText(LEVEL.getCompletedLines() + " Lines");
 
         // Copiamos el tipo de pieza de 'nextPart'
         type = nextPart;
@@ -87,7 +87,7 @@ public class Part implements Var, Parts {
         for (Coordinates c : PART) {
             if ((BOARD.getPos(c.x(), c.y()) % 2) != 0) {
 
-                GAME_TIMER.stopTimers();
+                GameTimers.stopTimers();
 
                 START_BUTTON.setVisible(false);
                 STOP_BUTTON.setVisible(false);
@@ -106,8 +106,6 @@ public class Part implements Var, Parts {
 
         NEXT_PART_PANEL.repaint();
     }
-
-    // Logica
 
     /**
      * Pinta la pieza en el tablero
@@ -275,7 +273,7 @@ public class Part implements Var, Parts {
                         else if (c.x() == (center.x()-1) && c.y() == (center.y()+1)) c.setCoords(c.x(), center.y() - 1);
                         break;
                     }
-                    case I, L, L_Inv: {
+                    case I, L, J: {
                         if (c.x() == (center.x()-2) && c.y() == center.y()) c.setCoords(center.x(), c.y() - 2);
                         else if (c.x() == center.x() && c.y() == (center.y()-2)) c.setCoords(c.x() + 2, center.y());
                         else if (c.x() == (center.x()+2) && c.y() == center.y()) c.setCoords(center.x(), c.y() + 2);
@@ -301,7 +299,7 @@ interface Parts {
      */
     enum Types{
         L(Parts.L, 2, 2),
-        L_Inv(Parts.L_Inv, 4, 3),
+        J(Parts.J, 4, 3),
         T(Parts.T, 6, 2),
         S(Parts.S, 8, 3),
         Z(Parts.Z, 10, 3),
@@ -367,7 +365,7 @@ interface Parts {
       []
     [][]
      */
-    List<Coordinates> L_Inv = new ArrayList<>(
+    List<Coordinates> J = new ArrayList<>(
             Arrays.asList(
                     new Coordinates(7, 0),
                     new Coordinates(7, 1),
