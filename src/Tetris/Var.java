@@ -248,12 +248,10 @@ public interface Var {
 
     class GameTimers {
 
-        public GameTimers(){}
-
         private static Timer gameTimer = new Timer();
         private static Timer fpsTimer = new Timer();
 
-        private static boolean isStarted = false;
+        public static boolean isStarted = false;
 
         public static void startGame() {
             isStarted = true;
@@ -295,10 +293,6 @@ public interface Var {
             LEVEL.restart();
             PART.newPart(true);
             GAME_PANEL.repaint();
-        }
-
-        public static boolean isStarted() {
-            return isStarted;
         }
 
     }
