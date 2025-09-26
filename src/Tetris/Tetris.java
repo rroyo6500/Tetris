@@ -27,6 +27,7 @@ public class Tetris extends JFrame implements Var {
 
             START_BUTTON.setVisible(true);
             STOP_BUTTON.setVisible(true);
+            PAUSE_BUTTON.setVisible(true);
             GAMEOVER_PANEL.setVisible(false);
 
         });
@@ -78,7 +79,7 @@ public class Tetris extends JFrame implements Var {
         linesBackground.add(COMPLETED_LINES);
 
         // Botones
-        // Iniciar Juego / Detener Juego
+        // Iniciar Juego / Detener Juego / Pausar juego
 
         START_BUTTON.setBounds(320, 250, 250, 50);
         START_BUTTON.setBackground(Color.GREEN);
@@ -97,9 +98,25 @@ public class Tetris extends JFrame implements Var {
         STOP_BUTTON.addActionListener(_ -> {
             if (GameTimers.isStarted){
                 GameTimers.stopTimers();
+                LEVEL.restart();
+                PART.newPart(true);
+                GAME_PANEL.repaint();
             }
         });
         panel.add(STOP_BUTTON);
+
+        PAUSE_BUTTON.setBounds(320, 400, 250, 50);
+        PAUSE_BUTTON.setBackground(Color.ORANGE);
+        PAUSE_BUTTON.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        PAUSE_BUTTON.addActionListener(_ -> {
+            if (GameTimers.isStarted){
+                GameTimers.stopTimers();
+            } else {
+                GAME_PANEL.requestFocusInWindow();
+                GameTimers.startGame();
+            }
+        });
+        panel.add(PAUSE_BUTTON);
 
         // Movimiento Pieza
 
@@ -108,14 +125,16 @@ public class Tetris extends JFrame implements Var {
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
 
-                if (e.getKeyCode() == 40) {
-                    PART.down();
-                } else if (e.getKeyCode() == 39) {
-                    PART.right();
-                } else if (e.getKeyCode() == 37) {
-                    PART.left();
-                } else if (e.getKeyCode() == 38) {
-                    PART.rotate();
+                if (GameTimers.isStarted){
+                    if (e.getKeyCode() == 40) {
+                        PART.down();
+                    } else if (e.getKeyCode() == 39) {
+                        PART.right();
+                    } else if (e.getKeyCode() == 37) {
+                        PART.left();
+                    } else if (e.getKeyCode() == 38) {
+                        PART.rotate();
+                    }
                 }
 
             }
@@ -165,6 +184,10 @@ public class Tetris extends JFrame implements Var {
                 g.fillRect(423, 596, 104, 2);
                 g.fillRect(423, 577, 2, 21);
                 g.fillRect(525, 577, 2, 21);
+                g.fillRect(318, 398, 254, 2);
+                g.fillRect(318, 450, 254, 2);
+                g.fillRect(318, 400, 2, 50);
+                g.fillRect(570, 400, 2, 50);
 
                 g.setColor(Color.GRAY);
                 g.fillRect(6, 21, 308, 2);
@@ -195,6 +218,10 @@ public class Tetris extends JFrame implements Var {
                 g.fillRect(421, 598, 108, 2);
                 g.fillRect(421, 575, 2, 23);
                 g.fillRect(527, 575, 2, 23);
+                g.fillRect(316, 396, 258, 2);
+                g.fillRect(316, 452, 258, 2);
+                g.fillRect(316, 398, 2, 54);
+                g.fillRect(572, 398, 2, 54);
 
                 g.setColor(Color.LIGHT_GRAY);
                 g.fillRect(4, 19, 570, 2);
@@ -243,6 +270,15 @@ public class Tetris extends JFrame implements Var {
                 g.fillRect(531, 598, 2, 2);
                 g.fillRect(533, 599, 2, 1);
                 g.fillRect(531, 596, 1, 2);
+                g.fillRect(316, 394, 260, 2);
+                g.fillRect(316, 454, 260, 2);
+                g.fillRect(574, 396, 2, 58);
+                g.fillRect(316, 392, 2, 2);
+                g.fillRect(316, 390, 1, 2);
+                g.fillRect(318, 393, 2, 1);
+                g.fillRect(316, 456, 2, 2);
+                g.fillRect(318, 456, 2, 1);
+                g.fillRect(316, 458, 1, 2);
 
             }
         };

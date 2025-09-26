@@ -21,6 +21,7 @@ public interface Var {
 
     JButton START_BUTTON = new JButton("Start");
     JButton STOP_BUTTON = new JButton("Stop");
+    JButton PAUSE_BUTTON = new JButton("Pause");
 
     JPanel GAME_PANEL = new JPanel(){
         protected void paintComponent(Graphics g) {
@@ -289,10 +290,6 @@ public interface Var {
             gameTimer = new Timer();
 
             isStarted = false;
-
-            LEVEL.restart();
-            PART.newPart(true);
-            GAME_PANEL.repaint();
         }
 
     }

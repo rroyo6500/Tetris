@@ -91,8 +91,13 @@ public class Part implements Var, Parts {
 
                 START_BUTTON.setVisible(false);
                 STOP_BUTTON.setVisible(false);
+                PAUSE_BUTTON.setVisible(false);
                 GAMEOVER_PANEL.setVisible(true);
                 GAMEOVER_PANEL.repaint();
+
+                LEVEL.restart();
+                this.newPart(true);
+                GAME_PANEL.repaint();
 
                 break;
             }
