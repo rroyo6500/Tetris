@@ -92,7 +92,7 @@ public class Tetris extends JFrame implements Var {
         });
         panel.add(START_BUTTON);
 
-        STOP_BUTTON.setBounds(320, 325, 250, 50);
+        STOP_BUTTON.setBounds(320, 400, 250, 50);
         STOP_BUTTON.setBackground(Color.RED);
         STOP_BUTTON.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         STOP_BUTTON.addActionListener(_ -> {
@@ -105,7 +105,7 @@ public class Tetris extends JFrame implements Var {
         });
         panel.add(STOP_BUTTON);
 
-        PAUSE_BUTTON.setBounds(320, 400, 250, 50);
+        PAUSE_BUTTON.setBounds(320, 325, 250, 50);
         PAUSE_BUTTON.setBackground(Color.ORANGE);
         PAUSE_BUTTON.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         PAUSE_BUTTON.addActionListener(_ -> {
